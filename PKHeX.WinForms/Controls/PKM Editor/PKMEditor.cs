@@ -491,18 +491,23 @@ namespace PKHeX.WinForms.Controls
         {
             if (pkm.Format < 6)
                 return null;
+
+            // Specific Markings
+            if (pkm.VC)
+                return Properties.Resources.gen_vc;
+            if (pkm.GO)
+                return Properties.Resources.gen_go;
+            if (pkm.GG) // LGP/E -- GO already returned above.
+                return Properties.Resources.gen_gg;
+
+            // Lumped Generations
             if (pkm.Gen6)
                 return Properties.Resources.gen_6;
             if (pkm.Gen7)
                 return Properties.Resources.gen_7;
             if (pkm.Gen8)
                 return Properties.Resources.gen_8;
-            if (pkm.VC)
-                return Properties.Resources.gen_vc;
-            if (pkm.GG)
-                return Properties.Resources.gen_gg;
-            if (pkm.GO)
-                return Properties.Resources.gen_go;
+
             return null;
         }
 
@@ -1732,6 +1737,7 @@ namespace PKHeX.WinForms.Controls
         {
             Label_EncryptionConstant.Visible = BTN_RerollEC.Visible = TB_EC.Visible = gen >= 6 && !hidden;
             BTN_RerollPID.Visible = Label_PID.Visible = TB_PID.Visible = gen >= 3 && !hidden;
+            TB_HomeTracker.Visible = L_HomeTracker.Visible = gen >= 8 && !hidden;
         }
 
         private void ToggleInterface(int gen)

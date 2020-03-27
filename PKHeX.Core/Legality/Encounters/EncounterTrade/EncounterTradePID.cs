@@ -8,7 +8,9 @@
         /// <summary>
         /// Fixed <see cref="PKM.PID"/> value the encounter must have.
         /// </summary>
-        public uint PID;
+        public readonly uint PID;
+
+        public EncounterTradePID(uint pid) => PID = pid;
 
         public override Shiny Shiny { get; set; } = Shiny.FixedValue;
 
@@ -28,7 +30,7 @@
 
         protected override bool IsMatchNatureGenderShiny(PKM pkm)
         {
-            if (pkm.PID != pkm.EncryptionConstant)
+            if (PID != pkm.EncryptionConstant)
                 return false;
             if (Nature != Nature.Random && (int)Nature != pkm.Nature) // gen5 BW only
                 return false;
