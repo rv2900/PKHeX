@@ -63,10 +63,6 @@ namespace PKHeX.WinForms
             else
             { TB_OTName.Visible = L_TrainerName.Visible = GB_TCM.Visible = false; }
 
-            if (SAV.RS)
-                NUD_BP.Visible = L_BP.Visible = false;
-            else
-                NUD_BP.Value = Math.Min(NUD_BP.Maximum, SAV.BP);
             NUD_Coins.Value = Math.Min(NUD_Coins.Maximum, SAV.Coin);
         }
 
@@ -463,6 +459,7 @@ namespace PKHeX.WinForms
                 LoadRecordID(index);
                 NUD_FameH.Visible = NUD_FameS.Visible = NUD_FameM.Visible = index == 1;
             };
+            CB_Record.MouseWheel += (s, e) => ((HandledMouseEventArgs)e).Handled = true; // disallowed
             CB_Record.SelectedIndex = 0;
             LoadRecordID(0);
             NUD_RecordValue.ValueChanged += (s, e) =>
@@ -476,6 +473,19 @@ namespace PKHeX.WinForms
                 if (index == 1)
                     LoadFame(val);
             };
+
+            if (!SAV.RS)
+            {
+                NUD_BP.Value = Math.Min(NUD_BP.Maximum, SAV.BP);
+                NUD_BPEarned.Value = SAV.BPEarned;
+                NUD_BPEarned.ValueChanged += (s, e) => SAV.BPEarned = (uint)NUD_BPEarned.Value;
+            }
+            else
+            {
+                NUD_BP.Visible = L_BP.Visible = false;
+                NUD_BPEarned.Visible = L_BPEarned.Visible = false;
+            }
+
             NUD_FameH.ValueChanged += (s, e) => ChangeFame();
             NUD_FameM.ValueChanged += (s, e) => ChangeFame();
             NUD_FameS.ValueChanged += (s, e) => ChangeFame();
@@ -483,9 +493,6 @@ namespace PKHeX.WinForms
             void ChangeFame() => records.SetRecord(1, (uint)(NUD_RecordValue.Value = GetFameTime()));
             void LoadRecordID(int index) => NUD_RecordValue.Value = records.GetRecord(index);
             void LoadFame(uint val) => SetFameTime(val);
-
-            NUD_BPEarned.Value = SAV.BPEarned;
-            NUD_BPEarned.ValueChanged += (s, e) => SAV.BPEarned = (uint)NUD_BPEarned.Value;
         }
 
         public uint GetFameTime()

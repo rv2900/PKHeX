@@ -81,7 +81,7 @@ namespace PKHeX.Core
 
         #region Savedata Container Handling
         public byte[] GetData(int offset, int length) => GetData(Data, offset, length);
-        public byte[] GetData(byte[] data, int offset, int length) => data.Slice(offset, length);
+        protected static byte[] GetData(byte[] data, int offset, int length) => data.Slice(offset, length);
         public void SetData(byte[] input, int offset) => SetData(Data, input, offset);
 
         public void SetData(byte[] dest, byte[] input, int offset)
@@ -762,11 +762,11 @@ namespace PKHeX.Core
 
             SlotPointerUtil.UpdateRepointFrom(boxclone, BD, 0, SlotPointers);
 
-            // clear storage flags to ensure all data is written back
-            foreach (var pk in result)
-                pk.StorageFlags = StorageSlotFlag.None;
-
-            BoxData = boxclone;
+            for (int i = 0; i < boxclone.Length; i++)
+            {
+                var pk = boxclone[i];
+                SetBoxSlotAtIndex(pk, i, PKMImportSetting.Skip, PKMImportSetting.Skip);
+            }
             return count;
         }
 

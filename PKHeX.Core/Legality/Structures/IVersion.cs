@@ -4,12 +4,17 @@ namespace PKHeX.Core
 {
     public interface IVersion
     {
-        GameVersion Version { get; set; }
+        GameVersion Version { get; }
+    }
+
+    internal interface IVersionSet
+    {
+        GameVersion Version { set; }
     }
 
     public static partial class Extensions
     {
-        public static bool CanBeReceivedBy(this IVersion ver, GameVersion game) => ver.Version.Contains(game);
+        private static bool CanBeReceivedBy(this IVersion ver, GameVersion game) => ver.Version.Contains(game);
 
         public static GameVersion GetCompatibleVersion(this IVersion ver, GameVersion prefer)
         {
@@ -18,12 +23,12 @@ namespace PKHeX.Core
             return ver.GetSingleVersion();
         }
 
-        internal static void SetVersion(this IEnumerable<IVersion> arr, GameVersion game)
+        internal static void SetVersion<T>(this IEnumerable<T> arr, GameVersion game) where T : IVersion, IVersionSet
         {
             foreach (var z in arr)
             {
-                if (z.Version <= 0)
-                    z.Version = game;
+                if (((IVersion)z).Version <= 0)
+                    ((IVersionSet)z).Version = game;
             }
         }
 

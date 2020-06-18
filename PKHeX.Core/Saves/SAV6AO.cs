@@ -83,6 +83,8 @@ namespace PKHeX.Core
         public SuperTrainBlock SuperTrain => Blocks.SuperTrain;
         public MaisonBlock Maison => Blocks.Maison;
         public SubEventLog6 SUBE => Blocks.SUBE;
+        public ConfigSave6 Config => Blocks.Config;
+        public Encount6 Encount => Blocks.Encount;
 
         public Misc6AO Misc => Blocks.Misc;
         public Zukan6AO Zukan => Blocks.Zukan;
@@ -111,6 +113,12 @@ namespace PKHeX.Core
         public override int Vivillon { get => Blocks.Misc.Vivillon; set => Blocks.Misc.Vivillon = value; }
         public override int Badges { get => Blocks.Misc.Badges; set => Blocks.Misc.Badges = value; }
         public override int BP { get => Blocks.Misc.BP; set => Blocks.Misc.BP = value; }
+
+        public override int MultiplayerSpriteID
+        {
+            get => Blocks.Status.MultiplayerSpriteID_1;
+            set => Blocks.Status.MultiplayerSpriteID_1 = Blocks.Status.MultiplayerSpriteID_2 = value;
+        }
 
         // Daycare
         public override int DaycareSeedSize => 16;

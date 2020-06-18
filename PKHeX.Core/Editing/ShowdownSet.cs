@@ -7,7 +7,7 @@ namespace PKHeX.Core
     /// <summary>
     /// Logic for exporting and importing <see cref="PKM"/> data in Pokémon Showdown's text format.
     /// </summary>
-    public sealed class ShowdownSet : IGigantamax
+    public sealed class ShowdownSet : IBattleTemplate
     {
         private static readonly string[] genders = {"M", "F", ""};
         private static readonly string[] genderForms = {"", "F", ""};
@@ -21,89 +21,55 @@ namespace PKHeX.Core
         private const int MAX_SPECIES = (int)Core.Species.MAX_COUNT - 1;
         private static readonly GameStrings DefaultStrings = GameInfo.GetStrings(GameLanguage.DefaultLanguage);
 
-        /// <summary>
-        /// <see cref="PKM.Species"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int Species { get; private set; } = -1;
 
-        /// <summary>
-        /// <see cref="PKM.Format"/> of the Set entity it is specific to.
-        /// </summary>
+        /// <inheritdoc/>
         public int Format { get; private set; } = PKMConverter.Format;
 
-        /// <summary>
-        /// <see cref="PKM.Nickname"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public string Nickname { get; set; } = string.Empty;
 
-        /// <summary>
-        /// <see cref="PKM.Gender"/> name of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public string Gender { get; private set; } = string.Empty;
 
-        /// <summary>
-        /// <see cref="PKM.HeldItem"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int HeldItem { get; private set; }
 
-        /// <summary>
-        /// <see cref="PKM.Ability"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int Ability { get; private set; } = -1;
 
-        /// <summary>
-        /// <see cref="PKM.CurrentLevel"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int Level { get; private set; } = 100;
 
-        /// <summary>
-        /// <see cref="PKM.CurrentLevel"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public bool Shiny { get; private set; }
 
-        /// <summary>
-        /// <see cref="PKM.CurrentFriendship"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int Friendship { get; private set; } = 255;
 
-        /// <summary>
-        /// <see cref="PKM.StatNature"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int Nature { get; set; } = -1;
 
-        /// <summary>
-        /// <see cref="PKM.AltForm"/> name of the Set entity, stored in PKHeX style (instead of Showdown's)
-        /// </summary>
+        /// <inheritdoc/>
         public string Form { get; private set; } = string.Empty;
 
-        /// <summary>
-        /// <see cref="PKM.AltForm"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int FormIndex { get; private set; }
 
-        /// <summary>
-        /// <see cref="PKM.EVs"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int[] EVs { get; private set; } = {00, 00, 00, 00, 00, 00};
 
-        /// <summary>
-        /// <see cref="PKM.IVs"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int[] IVs { get; private set; } = {31, 31, 31, 31, 31, 31};
 
-        /// <summary>
-        /// <see cref="PKM.HPType"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int HiddenPowerType { get; set; } = -1;
 
-        /// <summary>
-        /// <see cref="PKM.Moves"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public int[] Moves { get; } = {0, 0, 0, 0};
 
-        /// <summary>
-        /// <see cref="IGigantamax.CanGigantamax"/> of the Set entity.
-        /// </summary>
+        /// <inheritdoc/>
         public bool CanGigantamax { get; set; }
 
         /// <summary>
@@ -119,28 +85,16 @@ namespace PKHeX.Core
         private int[] EVsSpeedLast => new[] {EVs[0], EVs[1], EVs[2], EVs[4], EVs[5], EVs[3]};
 
         /// <summary>
-        /// Loads a new blank <see cref="ShowdownSet"/>.
-        /// </summary>
-        public ShowdownSet() { }
-
-        /// <summary>
         /// Loads a new <see cref="ShowdownSet"/> from the input string.
         /// </summary>
         /// <param name="input">Single-line string which will be split before loading.</param>
-        public ShowdownSet(string input)
-        {
-            var lines = input.Split(Splitters, StringSplitOptions.None);
-            LoadLines(lines);
-        }
+        public ShowdownSet(string input) : this(input.Split(Splitters, 0)) { }
 
         /// <summary>
         /// Loads a new <see cref="ShowdownSet"/> from the input string.
         /// </summary>
         /// <param name="lines">Enumerable list of lines.</param>
-        public ShowdownSet(IEnumerable<string> lines)
-        {
-            LoadLines(lines);
-        }
+        public ShowdownSet(IEnumerable<string> lines) => LoadLines(lines);
 
         private void LoadLines(IEnumerable<string> lines)
         {
@@ -164,7 +118,6 @@ namespace PKHeX.Core
 
         private void ParseLines(IEnumerable<string> lines)
         {
-            // ReSharper disable once GenericEnumeratorNotDisposed
             using var e = lines.GetEnumerator();
             if (!e.MoveNext())
                 return;
@@ -422,7 +375,7 @@ namespace PKHeX.Core
             SetFormString(pkm.AltForm);
         }
 
-        public void SetFormString(int index)
+        private void SetFormString(int index)
         {
             FormIndex = index;
             if (index <= 0)
@@ -430,8 +383,8 @@ namespace PKHeX.Core
                 Form = string.Empty;
                 return;
             }
-            var Forms = FormConverter.GetFormList(Species, Strings.Types, Strings.forms, genderForms, Format);
-            Form = FormIndex >= Forms.Length ? string.Empty : Forms[index];
+            var forms = FormConverter.GetFormList(Species, Strings.Types, Strings.forms, genderForms, Format);
+            Form = FormIndex >= forms.Length ? string.Empty : forms[index];
         }
 
         private void ParseFirstLine(string first)
@@ -439,31 +392,31 @@ namespace PKHeX.Core
             if (first.Contains(" @ "))
             {
                 string[] pieces = first.Split(ItemSplit, StringSplitOptions.None);
-                string itemstr = pieces[pieces.Length - 1].Trim();
+                string itemName = pieces[pieces.Length - 1].Trim();
 
-                ParseItemStr(itemstr);
+                ParseItemName(itemName);
                 ParseFirstLineNoItem(pieces[0]);
             }
             else
             {
-                ParseFirstLineNoItem(first.Trim());
+                ParseFirstLineNoItem(first);
             }
         }
 
-        private void ParseItemStr(string itemstr)
+        private void ParseItemName(string itemName)
         {
-            if (tryGetItem(Format))
+            if (TrySetItem(Format))
                 return;
-            if (tryGetItem(3))
+            if (TrySetItem(3))
                 return;
-            if (tryGetItem(2))
+            if (TrySetItem(2))
                 return;
-            InvalidLines.Add($"Unknown Item: {itemstr}");
+            InvalidLines.Add($"Unknown Item: {itemName}");
 
-            bool tryGetItem(int format)
+            bool TrySetItem(int format)
             {
-                var items = (string[])Strings.GetItemStrings(format); // ireadonlylist->string[] must be possible for the provided strings
-                int item = StringUtil.FindIndexIgnoreCase(items, itemstr);
+                var items = (string[])Strings.GetItemStrings(format); // IReadOnlyList<string>->string[] must be possible for the provided strings
+                int item = StringUtil.FindIndexIgnoreCase(items, itemName);
                 if (item < 0)
                     return false;
                 HeldItem = item;
@@ -505,7 +458,7 @@ namespace PKHeX.Core
             if ((Species = StringUtil.FindIndexIgnoreCase(Strings.specieslist, spec)) >= 0) // success, nothing else!
                 return true;
 
-            // Forme string present.
+            // Form string present.
             int end = spec.LastIndexOf('-');
             if (end < 0)
                 return false;
@@ -519,10 +472,11 @@ namespace PKHeX.Core
             // failure to parse, check edge cases
             foreach (var e in DashedSpecies)
             {
-                if (!spec.StartsWith(Strings.Species[e].Replace("♂", "-M").Replace("♀", "-F")))
+                var sn = Strings.Species[e];
+                if (!spec.StartsWith(sn.Replace("♂", "-M").Replace("♀", "-F")))
                     continue;
                 Species = e;
-                Form = spec.Substring(Strings.Species[e].Length);
+                Form = spec.Substring(sn.Length);
                 return true;
             }
 
@@ -550,7 +504,7 @@ namespace PKHeX.Core
             {
                 int end = line.IndexOf(')');
                 n2 = line.Substring(index + 1, end - 1);
-                n1 = line.Substring(end + 2);
+                n1 = end < line.Length - 2 ? line.Substring(end + 2) : n2;
             }
 
             if (ParseSpeciesForm(n2))
@@ -622,8 +576,8 @@ namespace PKHeX.Core
             {
                 int pos = i * 2;
                 int index = StringUtil.FindIndexIgnoreCase(StatNames, list[pos + 1]);
-                if (index >= 0 && byte.TryParse(list[pos + 0], out var IV))
-                    IVs[index] = IV;
+                if (index >= 0 && byte.TryParse(list[pos + 0], out var iv))
+                    IVs[index] = iv;
                 else
                     InvalidLines.Add($"Unknown IV stat: {list[pos]}");
             }
@@ -665,9 +619,12 @@ namespace PKHeX.Core
                 case (int)Core.Species.Furfrou:
                 case (int)Core.Species.Greninja:
                 case (int)Core.Species.Rockruff:
+                    return string.Empty;
+
                 case (int)Core.Species.Polteageist:
                 case (int)Core.Species.Sinistea:
-                    return string.Empty;
+                    return form == "Antique" ? form : string.Empty;
+
                 default:
                     if (Legal.Totem_USUM.Contains(spec) && form == "Large")
                         return Legal.Totem_Alolan.Contains(spec) && spec != (int)Core.Species.Mimikyu ? "Alola-Totem" : "Totem";

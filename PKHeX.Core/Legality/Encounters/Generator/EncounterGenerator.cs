@@ -48,8 +48,8 @@ namespace PKHeX.Core
 
             foreach (var z in GenerateFilteredEncounters12(pkm))
             {
-                info.Generation = z is IGeneration g ? g.Generation : 2;
-                info.Game = ((IVersion)z).Version;
+                info.Generation = z.Generation;
+                info.Game = z.Version;
                 yield return z;
             }
         }
@@ -191,8 +191,8 @@ namespace PKHeX.Core
                 {
                     int eggspec = GetBaseEggSpecies(pkm).Species;
                     if (ParseSettings.AllowGen2Crystal(pkm))
-                        yield return new EncounterEgg(eggspec, 0, 5) { Version = GameVersion.C }; // gen2 egg
-                    yield return new EncounterEgg(eggspec, 0, 5) { Version = GameVersion.GS }; // gen2 egg
+                        yield return new EncounterEgg(eggspec, 0, 5, 2, GameVersion.C); // gen2 egg
+                    yield return new EncounterEgg(eggspec, 0, 5, 2, GameVersion.GS); // gen2 egg
                 }
             }
 
@@ -234,11 +234,11 @@ namespace PKHeX.Core
             {
                 var move = GetPreferredGBIterator(pkm, g1i, g2i);
                 var obj = move.Peek();
-                int gen = obj is IGeneration g ? g.Generation : 2; // only eggs don't implement interface
+                int gen = obj.Generation;
 
                 if (gen == 1 && (pkm.Korean || (obj is EncounterTrade t && !IsEncounterTrade1Valid(pkm, t))))
                     deferred.Add(obj);
-                else if (gen == 2 && ((pkm.Korean && (((IVersion)obj).Version == GameVersion.C)) || kadabra))
+                else if (gen == 2 && ((pkm.Korean && obj.Version == GameVersion.C) || kadabra))
                     deferred.Add(obj);
                 else
                     yield return obj;

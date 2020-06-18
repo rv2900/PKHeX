@@ -155,6 +155,83 @@
             new EncounterStatic8ND(50,08,4) { Species = 569, Ability = A4, Moves = new[]{ 441, 499, 402, 707 }, CanGigantamax = true }, // Garbodor
             new EncounterStatic8ND(50,08,4) { Species = 006, Ability = A4, Moves = new[]{ 053, 403, 076, 257 }, CanGigantamax = true }, // Charizard
             new EncounterStatic8ND(50,08,4) { Species = 884, Ability = A4, Moves = new[]{ 337, 430, 784, 776 }, CanGigantamax = true }, // Duraludon
+
+            // 4/09 - Easter Eggs
+            new EncounterStatic8ND(40,05,2) { Species = 848, Ability = A4, Moves = new[]{ 609, 051, 175, 715 } }, // Toxel
+            new EncounterStatic8ND(40,05,2) { Species = 458, Ability = A4, Moves = new[]{ 403, 061, 469, 503 } }, // Mantyke
+            new EncounterStatic8ND(40,05,3) { Species = 406, Ability = A4, Moves = new[]{ 071, 074, 078, 188 } }, // Budew
+            new EncounterStatic8ND(40,05,3) { Species = 236, Ability = A4, Moves = new[]{ 280, 157, 252, 116 } }, // Tyrogue
+            new EncounterStatic8ND(40,05,3) { Species = 438, Ability = A4, Moves = new[]{ 317, 389, 157, 313 } }, // Bonsly
+            new EncounterStatic8ND(40,05,3) { Species = 447, Ability = A4, Moves = new[]{ 014, 009, 232, 249 } }, // Riolu
+            new EncounterStatic8ND(40,05,3) { Species = 446, Ability = A4, Moves = new[]{ 034, 089, 044, 122 } }, // Munchlax
+            new EncounterStatic8ND(40,05,3) { Species = 439, Ability = A4, Moves = new[]{ 389, 060, 182, 085 } }, // Mime Jr.
+            new EncounterStatic8ND(50,08,4) { Species = 175, Ability = A4, Moves = new[]{ 605, 219, 246, 053 } }, // Togepi
+            new EncounterStatic8ND(50,08,4) { Species = 360, Ability = A4, Moves = new[]{ 068, 243, 204, 133 } }, // Wynaut
+            new EncounterStatic8ND(50,08,4) { Species = 173, Ability = A4, Moves = new[]{ 574, 005, 113, 034 } }, // Cleffa
+            new EncounterStatic8ND(50,08,4) { Species = 172, Ability = A4, Moves = new[]{ 583, 417, 085, 186 } }, // Pichu
+            new EncounterStatic8ND(60,10,5) { Species = 132, Ability = A4, Moves = new[]{ 144, 000, 000, 000 } }, // Ditto
+
+            // 4/27 - Meta
+            new EncounterStatic8ND(17,01,1) { Species = 246, Ability = A4, Moves = new[]{ 157, 044, 184, 033 } }, // Larvitar
+            new EncounterStatic8ND(17,01,1) { Species = 529, Ability = A4, Moves = new[]{ 189, 232, 010, 468 } }, // Drilbur
+            new EncounterStatic8ND(17,01,1) { Species = 546, Ability = A4, Moves = new[]{ 584, 078, 075, 071 } }, // Cottonee
+            new EncounterStatic8ND(17,01,1) { Species = 885, Ability = A4, Moves = new[]{ 611, 098, 310, 044 } }, // Dreepy
+            new EncounterStatic8ND(17,01,1) { Species = 175, Ability = A4, Moves = new[]{ 204, 577, 113, 791 } }, // Togepi
+            new EncounterStatic8ND(30,03,2) { Species = 247, Ability = A4, Moves = new[]{ 157, 242, 334, 707 } }, // Pupitar
+            new EncounterStatic8ND(30,03,2) { Species = 529, Ability = A4, Moves = new[]{ 189, 232, 157, 306 } }, // Drilbur
+            new EncounterStatic8ND(30,03,2) { Species = 546, Ability = A4, Moves = new[]{ 202, 075, 204, 077 } }, // Cottonee
+            new EncounterStatic8ND(30,03,2) { Species = 886, Ability = A4, Moves = new[]{ 097, 506, 372, 458 } }, // Drakloak
+            new EncounterStatic8ND(30,03,2) { Species = 176, Ability = A4, Moves = new[]{ 584, 038, 113, 791 } }, // Togetic
+            new EncounterStatic8ND(40,05,3) { Species = 248, Ability = A4, Moves = new[]{ 444, 242, 334, 089 } }, // Tyranitar
+            new EncounterStatic8ND(40,05,3) { Species = 530, Ability = A4, Moves = new[]{ 529, 232, 157, 032 } }, // Excadrill
+            new EncounterStatic8ND(40,05,3) { Species = 547, Ability = A4, Moves = new[]{ 283, 585, 077, 366 } }, // Whimsicott
+            new EncounterStatic8ND(40,05,3) { Species = 887, Ability = A4, Moves = new[]{ 751, 506, 349, 458 } }, // Dragapult
+            new EncounterStatic8ND(40,05,3) { Species = 468, Ability = A4, Moves = new[]{ 605, 038, 246, 403 } }, // Togekiss
+            new EncounterStatic8ND(50,08,4) { Species = 248, Ability = A4, Moves = new[]{ 444, 242, 442, 089 } }, // Tyranitar
+            new EncounterStatic8ND(50,08,4) { Species = 530, Ability = A4, Moves = new[]{ 529, 442, 157, 032 } }, // Excadrill
+            new EncounterStatic8ND(50,08,4) { Species = 547, Ability = A4, Moves = new[]{ 283, 585, 073, 366 } }, // Whimsicott
+            new EncounterStatic8ND(50,08,4) { Species = 887, Ability = A4, Moves = new[]{ 751, 506, 349, 211 } }, // Dragapult
+            new EncounterStatic8ND(50,08,4) { Species = 468, Ability = A4, Moves = new[]{ 605, 219, 246, 403 } }, // Togekiss
+            new EncounterStatic8ND(60,10,5) { Species = 248, Ability = A4, Moves = new[]{ 444, 242, 442, 276 } }, // Tyranitar
+            new EncounterStatic8ND(60,10,5) { Species = 530, Ability = A4, Moves = new[]{ 089, 442, 157, 032 } }, // Excadrill
+            new EncounterStatic8ND(60,10,5) { Species = 547, Ability = A4, Moves = new[]{ 538, 585, 073, 366 } }, // Whimsicott
+            new EncounterStatic8ND(60,10,5) { Species = 887, Ability = A4, Moves = new[]{ 751, 566, 349, 211 } }, // Dragapult
+            new EncounterStatic8ND(60,10,5) { Species = 468, Ability = A4, Moves = new[]{ 605, 219, 246, 053 } }, // Togekiss
+
+            // 5/11 - Gigantamax Pikachu
+            new EncounterStatic8ND(17,01,1) { Species = 025, Ability = A4, Moves = new[]{ 084, 104, 486, 364 }, CanGigantamax = true }, // Pikachu
+            new EncounterStatic8ND(30,03,2) { Species = 025, Ability = A4, Moves = new[]{ 021, 209, 097, 364 }, CanGigantamax = true }, // Pikachu
+            new EncounterStatic8ND(40,05,3) { Species = 025, Ability = A4, Moves = new[]{ 021, 113, 085, 364 }, CanGigantamax = true }, // Pikachu
+            new EncounterStatic8ND(50,08,4) { Species = 025, Ability = A4, Moves = new[]{ 087, 113, 085, 364 }, CanGigantamax = true }, // Pikachu
+            new EncounterStatic8ND(50,08,4) { Species = 025, Ability = A4, Moves = new[]{ 087, 113, 057, 085 }, CanGigantamax = true }, // Pikachu
+            new EncounterStatic8ND(60,10,5) { Species = 025, Ability = A4, Moves = new[]{ 087, 113, 057, 364 }, CanGigantamax = true }, // Pikachu
+            new EncounterStatic8ND(60,10,5) { Species = 025, Ability = A4, Moves = new[]{ 087, 113, 057, 344 }, CanGigantamax = true }, // Pikachu
+
+            // 5/18 - Gigantamax Eevee
+            new EncounterStatic8ND(17,01,1) { Species = 133, Ability = A4, Moves = new[]{ 098, 270, 608, 028 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(30,03,2) { Species = 133, Ability = A4, Moves = new[]{ 129, 270, 608, 044 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(40,05,3) { Species = 133, Ability = A4, Moves = new[]{ 036, 270, 608, 044 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(40,05,3) { Species = 133, Ability = A4, Moves = new[]{ 036, 270, 608, 231 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(50,08,4) { Species = 133, Ability = A4, Moves = new[]{ 038, 270, 204, 044 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(50,08,4) { Species = 133, Ability = A4, Moves = new[]{ 038, 203, 204, 231 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(60,10,5) { Species = 133, Ability = A4, Moves = new[]{ 038, 270, 204, 231 }, CanGigantamax = true }, // Eevee
+            new EncounterStatic8ND(60,10,5) { Species = 133, Ability = A4, Moves = new[]{ 387, 203, 204, 231 }, CanGigantamax = true }, // Eevee
+
+            // 5/25 - Gigantamax Meowth
+            new EncounterStatic8ND(17,01,1) { Species = 052, Ability = A4, Moves = new[]{ 252, 044, 010, 364 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(17,01,1) { Species = 052, Ability = A4, Moves = new[]{ 006, 044, 010, 364 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(30,03,2) { Species = 052, Ability = A4, Moves = new[]{ 252, 044, 269, 154 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(30,03,2) { Species = 052, Ability = A4, Moves = new[]{ 006, 044, 269, 154 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(40,05,3) { Species = 052, Ability = A4, Moves = new[]{ 252, 044, 417, 163 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(40,05,3) { Species = 052, Ability = A4, Moves = new[]{ 006, 044, 417, 163 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(50,08,4) { Species = 052, Ability = A4, Moves = new[]{ 252, 583, 417, 163 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(50,08,4) { Species = 052, Ability = A4, Moves = new[]{ 006, 583, 417, 163 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(60,10,5) { Species = 052, Ability = A4, Moves = new[]{ 252, 583, 417, 034 }, CanGigantamax = true }, // Meowth
+            new EncounterStatic8ND(60,10,5) { Species = 052, Ability = A4, Moves = new[]{ 006, 583, 417, 034 }, CanGigantamax = true }, // Meowth
+
+            // 6/2 - Gigantamax
+            new EncounterStatic8ND(30,03,2) { Species = 143, Ability = A4, Moves = new[]{ 034, 044, 280, 523 }, CanGigantamax = true }, // Snorlax
+          //new EncounterStatic8ND(60,10,5) { Species = 143, Ability = A4, Moves = new[]{ 034, 442, 242, 428 }, CanGigantamax = true }, // Snorlax
         };
 
         internal static readonly EncounterStatic8ND[] Dist_SW =
@@ -346,6 +423,29 @@
             // 3/25 - Charizard
             new EncounterStatic8ND(60,10,5) { Species = 879, Ability = A4, Moves = new[]{ 442, 583, 438, 089 }, CanGigantamax = true }, // Copperajah
             new EncounterStatic8ND(60,10,5) { Species = 884, Ability = A4, Moves = new[]{ 430, 406, 085, 334 }, CanGigantamax = true }, // Duraludon
+
+            // 4/27 - Meta
+            new EncounterStatic8ND(17,01,1) { Species = 479, Ability = A4, Moves = new[]{ 104, 315, 084, 109 }, Form = 1 }, // Rotom-1
+            new EncounterStatic8ND(30,03,2) { Species = 479, Ability = A4, Moves = new[]{ 104, 315, 085, 109 }, Form = 1 }, // Rotom-1
+            new EncounterStatic8ND(40,05,3) { Species = 479, Ability = A4, Moves = new[]{ 521, 315, 085, 506 }, Form = 1 }, // Rotom-1
+            new EncounterStatic8ND(50,08,4) { Species = 479, Ability = A4, Moves = new[]{ 521, 315, 085, 261 }, Form = 1 }, // Rotom-1
+            new EncounterStatic8ND(60,10,5) { Species = 479, Ability = A4, Moves = new[]{ 521, 315, 435, 261 }, Form = 1 }, // Rotom-1
+
+            // 6/2 - Gigantamax
+            new EncounterStatic8ND(17,01,1) { Species = 869, Ability = A4, Moves = new[]{ 033, 186, 577, 230 }, CanGigantamax = true }, // Alcremie
+            new EncounterStatic8ND(30,03,2) { Species = 851, Ability = A4, Moves = new[]{ 044, 172, 489, 693 }, CanGigantamax = true }, // Centiskorch
+            new EncounterStatic8ND(30,03,2) { Species = 131, Ability = A4, Moves = new[]{ 352, 420, 109, 047 }, CanGigantamax = true }, // Lapras
+          //new EncounterStatic8ND(40,05,3) { Species = 099, Ability = A4, Moves = new[]{ 534, 232, 023, 106 }, CanGigantamax = true }, // Kingler
+            new EncounterStatic8ND(40,05,3) { Species = 842, Ability = A4, Moves = new[]{ 787, 496, 406, 523 }, CanGigantamax = true }, // Appletun
+            new EncounterStatic8ND(40,05,3) { Species = 851, Ability = A4, Moves = new[]{ 141, 424, 422, 044 }, CanGigantamax = true }, // Centiskorch
+            new EncounterStatic8ND(50,08,4) { Species = 823, Ability = A4, Moves = new[]{ 413, 442, 269, 103 }, CanGigantamax = true }, // Corviknight
+          //new EncounterStatic8ND(50,08,4) { Species = 861, Ability = A4, Moves = new[]{ 789, 793, 280, 409 }, CanGigantamax = true }, // Grimmsnarl
+            new EncounterStatic8ND(50,08,4) { Species = 569, Ability = A4, Moves = new[]{ 188, 499, 034, 707 }, CanGigantamax = true }, // Garbodor
+            new EncounterStatic8ND(50,08,4) { Species = 869, Ability = A4, Moves = new[]{ 577, 605, 105, 500 }, CanGigantamax = true }, // Alcremie
+            new EncounterStatic8ND(60,10,5) { Species = 131, Ability = A4, Moves = new[]{ 057, 196, 058, 329 }, CanGigantamax = true }, // Lapras
+            new EncounterStatic8ND(60,10,5) { Species = 849, Ability = A4, Moves = new[]{ 786, 506, 474, 409 }, CanGigantamax = true }, // Toxtricity
+            new EncounterStatic8ND(60,10,5) { Species = 094, Ability = A4, Moves = new[]{ 247, 482, 094, 196 }, CanGigantamax = true }, // Gengar
+          //new EncounterStatic8ND(60,10,5) { Species = 884, Ability = A4, Moves = new[]{ 430, 406, 085, 334 }, CanGigantamax = true }, // Duraludon
         };
 
         internal static readonly EncounterStatic8ND[] Dist_SH =
@@ -537,6 +637,35 @@
             // 3/25 - Charizard
             new EncounterStatic8ND(60,10,5) { Species = 569, Ability = A4, Moves = new[]{ 441, 409, 402, 707 }, CanGigantamax = true }, // Garbodor
             new EncounterStatic8ND(60,10,5) { Species = 006, Ability = A4, Moves = new[]{ 257, 403, 406, 411 }, CanGigantamax = true, Shiny = Shiny.Never }, // Charizard
+
+            // 4/09 - Easter Eggs (and fixed Charizard)
+            new EncounterStatic8ND(60,10,5) { Species = 569, Ability = A4, Moves = new[]{ 441, 499, 402, 707 }, CanGigantamax = true }, // Garbodor (Drain Punch -> Clear Smog)
+            new EncounterStatic8ND(60,10,5) { Species = 006, Ability = A4, Moves = new[]{ 053, 403, 019, 411 }, CanGigantamax = true }, // Charizard (Heat Wave, Dragon Pulse -> Flamethrower/Fly)
+
+            // 4/27 - Meta
+            new EncounterStatic8ND(17,01,1) { Species = 479, Ability = A4, Moves = new[]{ 104, 435, 084, 109 }, Form = 2 }, // Rotom-2 // From initial revision: Discharge @lv17 isn't legal, but they distributed it!
+            // new EncounterStatic8ND(17,01,1) { Species = 529, Ability = A4, Moves = new[]{ 189, 232, 056, 468 } }, // Drilbur // From initial revision: treat this as illegal.
+            new EncounterStatic8ND(17,01,1) { Species = 479, Ability = A4, Moves = new[]{ 104, 056, 084, 109 }, Form = 2 }, // Rotom-2
+            new EncounterStatic8ND(30,03,2) { Species = 479, Ability = A4, Moves = new[]{ 104, 056, 085, 109 }, Form = 2 }, // Rotom-2
+            new EncounterStatic8ND(40,05,3) { Species = 479, Ability = A4, Moves = new[]{ 521, 435, 085, 056 }, Form = 2 }, // Rotom-2
+            new EncounterStatic8ND(50,08,4) { Species = 479, Ability = A4, Moves = new[]{ 521, 435, 247, 056 }, Form = 2 }, // Rotom-2
+            new EncounterStatic8ND(60,10,5) { Species = 479, Ability = A4, Moves = new[]{ 521, 056, 247, 261 }, Form = 2 }, // Rotom-2
+
+            // 6/2 - Gigantamax
+          //new EncounterStatic8ND(17,01,1) { Species = 012, Ability = A4, Moves = new[]{ 405, 060, 016, 079 }, CanGigantamax = true }, // Butterfree
+          //new EncounterStatic8ND(30,03,2) { Species = 826, Ability = A4, Moves = new[]{ 405, 060, 496, 095 }, CanGigantamax = true }, // Orbeetle
+            new EncounterStatic8ND(30,03,2) { Species = 068, Ability = A4, Moves = new[]{ 523, 490, 279, 233 }, CanGigantamax = true }, // Machamp
+            new EncounterStatic8ND(40,05,3) { Species = 826, Ability = A4, Moves = new[]{ 405, 094, 202, 247 }, CanGigantamax = true }, // Orbeetle
+            new EncounterStatic8ND(40,05,3) { Species = 841, Ability = A4, Moves = new[]{ 406, 788, 491, 334 }, CanGigantamax = true }, // Flapple
+            new EncounterStatic8ND(40,05,3) { Species = 844, Ability = A4, Moves = new[]{ 693, 529, 201, 091 }, CanGigantamax = true }, // Sandaconda
+            new EncounterStatic8ND(50,08,4) { Species = 834, Ability = A4, Moves = new[]{ 157, 710, 317, 334 }, CanGigantamax = true }, // Drednaw
+          //new EncounterStatic8ND(50,08,4) { Species = 858, Ability = A4, Moves = new[]{ 605, 094, 595, 247 }, CanGigantamax = true }, // Hatterene
+          //new EncounterStatic8ND(50,08,4) { Species = 006, Ability = A4, Moves = new[]{ 053, 403, 076, 257 }, CanGigantamax = true }, // Charizard
+          //new EncounterStatic8ND(50,08,4) { Species = 012, Ability = A4, Moves = new[]{ 405, 403, 527, 078 }, CanGigantamax = true }, // Butterfree
+            new EncounterStatic8ND(60,10,5) { Species = 849, Ability = A4, Moves = new[]{ 786, 506, 599, 409 }, Form = 1, CanGigantamax = true }, // Toxtricity-1
+            new EncounterStatic8ND(60,10,5) { Species = 839, Ability = A4, Moves = new[]{ 246, 053, 157, 523 }, CanGigantamax = true }, // Coalossal
+            new EncounterStatic8ND(60,10,5) { Species = 068, Ability = A4, Moves = new[]{ 238, 007, 008, 089 }, CanGigantamax = true }, // Machamp
+            new EncounterStatic8ND(60,10,5) { Species = 879, Ability = A4, Moves = new[]{ 442, 583, 438, 089 }, CanGigantamax = true }, // Copperajah
         };
     }
 }

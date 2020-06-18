@@ -248,10 +248,10 @@ namespace PKHeX.Core
             if (cmd.PropertyValue.StartsWith(CONST_BYTES))
                 return SetByteArrayProperty(pk, cmd);
 
-            if (cmd.PropertyValue.StartsWith(CONST_SUGGEST))
+            if (cmd.PropertyValue.StartsWith(CONST_SUGGEST, true, CultureInfo.CurrentCulture))
                 return SetSuggestedPKMProperty(cmd.PropertyName, info, cmd.PropertyValue);
             if (cmd.PropertyValue == CONST_RAND && cmd.PropertyName == nameof(PKM.Moves))
-                return SetMoves(pk, pk.GetMoveSet(info.Legality, true));
+                return SetMoves(pk, info.Legality.GetMoveSet(true));
 
             if (SetComplexProperty(pk, cmd))
                 return ModifyResult.Modified;
@@ -352,8 +352,8 @@ namespace PKHeX.Core
         /// <param name="propValue">Suggestion string which starts with <see cref="CONST_SUGGEST"/></param>
         private static ModifyResult SetSuggestedPKMProperty(string name, PKMInfo info, string propValue)
         {
-            bool isAll() => propValue.EndsWith("All", true, CultureInfo.CurrentCulture);
-            bool isNone() => propValue.EndsWith("None", true, CultureInfo.CurrentCulture);
+            static bool IsAll(string p) => p.EndsWith("All", true, CultureInfo.CurrentCulture);
+            static bool IsNone(string p) => p.EndsWith("None", true, CultureInfo.CurrentCulture);
             var pk = info.Entity;
             switch (name)
             {
@@ -366,6 +366,14 @@ namespace PKHeX.Core
                     return ModifyResult.Modified;
                 case nameof(PB7.WeightAbsolute) when pk is PB7 pb7:
                     pb7.WeightAbsolute = pb7.CalcWeightAbsolute;
+                    return ModifyResult.Modified;
+
+                // Date Copy
+                case nameof(PKM.EggMetDate):
+                    pk.EggMetDate = pk.MetDate;
+                    return ModifyResult.Modified;
+                case nameof(PKM.MetDate):
+                    pk.MetDate = pk.EggMetDate;
                     return ModifyResult.Modified;
 
                 case nameof(PKM.Nature) when pk.Format >= 8:
@@ -384,15 +392,15 @@ namespace PKHeX.Core
                     if (pk.Format >= 8)
                     {
                         pk.ClearRecordFlags();
-                        if (isAll())
+                        if (IsAll(propValue))
                             pk.SetRecordFlags(); // all
-                        else if (!isNone())
+                        else if (!IsNone(propValue))
                             pk.SetRecordFlags(pk.Moves); // whatever fit the current moves
                     }
                     pk.SetRelearnMoves(info.SuggestedRelearn);
                     return ModifyResult.Modified;
                 case PROP_RIBBONS:
-                    if (isNone())
+                    if (IsNone(propValue))
                         RibbonApplicator.RemoveAllValidRibbons(pk);
                     else // All
                         RibbonApplicator.SetAllValidRibbons(pk);
@@ -404,11 +412,11 @@ namespace PKHeX.Core
 
                     int level = encounter.LevelMin;
                     int location = encounter.Location;
-                    int minlvl = EncounterSuggestion.GetLowestLevel(pk, encounter.LevelMin);
+                    int minimumLevel = EncounterSuggestion.GetLowestLevel(pk, encounter.LevelMin);
 
                     pk.Met_Level = level;
                     pk.Met_Location = location;
-                    pk.CurrentLevel = Math.Max(minlvl, level);
+                    pk.CurrentLevel = Math.Max(minimumLevel, level);
 
                     return ModifyResult.Modified;
 
@@ -427,7 +435,7 @@ namespace PKHeX.Core
                     return ModifyResult.Modified;
 
                 case nameof(PKM.Moves):
-                    return SetMoves(pk, pk.GetMoveSet(la: info.Legality));
+                    return SetMoves(pk, info.Legality.GetMoveSet());
 
                 case nameof(PKM.Ball):
                     BallApplicator.ApplyBallLegalByColor(pk);
@@ -450,7 +458,7 @@ namespace PKHeX.Core
         }
 
         /// <summary>
-        /// Sets the <see cref="PKM"/> byte array propery to a specified value.
+        /// Sets the <see cref="PKM"/> byte array property to a specified value.
         /// </summary>
         /// <param name="pk">Pokémon to modify.</param>
         /// <param name="cmd">Modification</param>
@@ -459,15 +467,15 @@ namespace PKHeX.Core
             switch (cmd.PropertyName)
             {
                 case nameof(PKM.Nickname_Trash):
-                    pk.Nickname_Trash = string2arr(cmd.PropertyValue);
+                    pk.Nickname_Trash = ConvertToBytes(cmd.PropertyValue);
                     return ModifyResult.Modified;
                 case nameof(PKM.OT_Trash):
-                    pk.OT_Trash = string2arr(cmd.PropertyValue);
+                    pk.OT_Trash = ConvertToBytes(cmd.PropertyValue);
                     return ModifyResult.Modified;
                 default:
                     return ModifyResult.Error;
             }
-            static byte[] string2arr(string str) => str.Substring(CONST_BYTES.Length).Split(',').Select(z => Convert.ToByte(z.Trim(), 16)).ToArray();
+            static byte[] ConvertToBytes(string str) => str.Substring(CONST_BYTES.Length).Split(',').Select(z => Convert.ToByte(z.Trim(), 16)).ToArray();
         }
 
         /// <summary>
@@ -478,12 +486,12 @@ namespace PKHeX.Core
         /// <returns>True if modified, false if no modifications done.</returns>
         private static bool SetComplexProperty(PKM pk, StringInstruction cmd)
         {
-            static DateTime parseDate(string val) => DateTime.ParseExact(val, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None);
+            static DateTime ParseDate(string val) => DateTime.ParseExact(val, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
             if (cmd.PropertyName == nameof(PKM.MetDate))
-                pk.MetDate = parseDate(cmd.PropertyValue);
+                pk.MetDate = ParseDate(cmd.PropertyValue);
             else if (cmd.PropertyName == nameof(PKM.EggMetDate))
-                pk.EggMetDate = parseDate(cmd.PropertyValue);
+                pk.EggMetDate = ParseDate(cmd.PropertyValue);
             else if (cmd.PropertyName == nameof(PKM.EncryptionConstant) && cmd.PropertyValue == CONST_RAND)
                pk.EncryptionConstant = Util.Rand32();
             else if ((cmd.PropertyName == nameof(PKM.Ability) || cmd.PropertyName == nameof(PKM.AbilityNumber)) && cmd.PropertyValue.StartsWith("$"))
@@ -492,8 +500,8 @@ namespace PKHeX.Core
                 pk.SetPIDGender(pk.Gender);
             else if (cmd.PropertyName == nameof(PKM.EncryptionConstant) && cmd.PropertyValue == nameof(PKM.PID))
                 pk.EncryptionConstant = pk.PID;
-            else if (cmd.PropertyName == nameof(PKM.PID) && cmd.PropertyValue.StartsWith(CONST_SHINY))
-                CommonEdits.SetShiny(pk, cmd.PropertyValue.EndsWith("0"));
+            else if (cmd.PropertyName == nameof(PKM.PID) && cmd.PropertyValue.StartsWith(CONST_SHINY, true, CultureInfo.CurrentCulture))
+                CommonEdits.SetShiny(pk, cmd.PropertyValue.EndsWith("0") ? Shiny.AlwaysSquare : Shiny.AlwaysStar);
             else if (cmd.PropertyName == nameof(PKM.Species) && cmd.PropertyValue == "0")
                 Array.Clear(pk.Data, 0, pk.Data.Length);
             else if (cmd.PropertyName.StartsWith("IV") && cmd.PropertyValue == CONST_RAND)

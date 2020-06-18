@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+// ReSharper disable UnusedMember.Local
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable RCS1213 // Remove unused member declaration.
 
 namespace PKHeX.Core
 {
@@ -53,6 +56,8 @@ namespace PKHeX.Core
         // Arrays (Blocks)
         private const uint KTeamNames = 0x1920C1E4; // Team 1, 2...6 ((10 + terminator)*6 char16 strings)
         private const uint KBoxLayout = 0x19722c89; // Box Names
+        public const uint KBoxWallpapers = 0x2EB1B190; // Box Wallpapers
+        private const uint KMenuButtons = 0xB1DDDCA8; // X Menu Button Order
 
         // Objects (Blocks)
         private const uint KBox = 0x0d66012c; // Box Data
@@ -76,7 +81,7 @@ namespace PKHeX.Core
         private const uint KMyStatus = 0xf25c070e; // Trainer Details
         private const uint KFriendLeagueCards = 0x28e707f5; // League Cards received from other players
         private const uint KNPCLeagueCards = 0xb1c26fb0; // League Cards received from NPCs
-        
+
         // Rental Teams - Objects (Blocks) (Incrementing internal names?) 
         private const uint KRentalTeam1 = 0x149A1DD0;
       //private const uint KRentalTeam2 = 0x159A1F63; // does not exist
@@ -124,5 +129,24 @@ namespace PKHeX.Core
         public const uint KBirthMonth = 0x0D987D50; // U32
         public const uint KBirthDay = 0x355C8314; // U32
         public const uint KCurrentDexEntry = 0x62743428; // U16 Species ID of last Pokedex entry viewed
+
+        public const uint KVolumeBackgroundMusic = 0xF8154AC9; // U32 0-10
+        public const uint KVolumeSoundEffects = 0x62F05895; // U32 0-10
+        public const uint KVolumePokémonCries = 0x1D482A63; // U32 0-10
+
+        public const uint KOptionTextSpeed = 0x92EB0306; // U32 TextSpeedOption
+        public const uint KOptionBattleEffects = 0xCCC153CD; // U32 OptOut (Show effects by default)
+        public const uint KOptionBattleStyle = 0x765468C3; // U32 OptOut (Allow Switch by default)
+        public const uint KOptionSendToBoxes = 0xB1C7C436; // U32 OptIn
+        public const uint KOptionGiveNicknames = 0x26A1BEDE; // U32 OptOut
+        public const uint KOptionUseGyroscope = 0x79C56A5C; // U32 OptOut
+        public const uint KOptionCameraVertical = 0x2846B7DB; // U32 OptOut Invert=1
+        public const uint KOptionCameraHorizontal = 0x7D249649; // U32 OptOut Invert=1
+        public const uint KOptionCasualControls = 0x3B23B1E2; // U32 OptOut Casual=0
+        public const uint KOptionAutoSave = 0xB027F396; // U32 OptOut AutoSave=0
+        public const uint KOptionShowNicknames = 0xCA8A8CEE; // U32 OptOut Show=0
+        public const uint KOptionShowMoves = 0x9C781AE2; // U32 OptOut Show=0
     }
 }
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore RCS1213 // Remove unused member declaration.

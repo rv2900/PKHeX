@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
@@ -29,9 +28,6 @@ namespace PKHeX.Drawing
 
         public static Bitmap ChangeOpacity(Image img, double trans)
         {
-            if (img.PixelFormat.HasFlag(PixelFormat.Indexed))
-                return (Bitmap)img;
-
             var bmp = (Bitmap)img.Clone();
             GetBitmapData(bmp, out BitmapData bmpData, out IntPtr ptr, out byte[] data);
 
@@ -45,9 +41,6 @@ namespace PKHeX.Drawing
 
         public static Bitmap ChangeAllColorTo(Image img, Color c)
         {
-            if (img.PixelFormat.HasFlag(PixelFormat.Indexed))
-                return (Bitmap)img;
-
             var bmp = (Bitmap)img.Clone();
             GetBitmapData(bmp, out BitmapData bmpData, out IntPtr ptr, out byte[] data);
 
@@ -61,9 +54,6 @@ namespace PKHeX.Drawing
 
         public static Bitmap ToGrayscale(Image img)
         {
-            if (img.PixelFormat.HasFlag(PixelFormat.Indexed))
-                return (Bitmap)img;
-
             var bmp = (Bitmap)img.Clone();
             GetBitmapData(bmp, out BitmapData bmpData, out IntPtr ptr, out byte[] data);
 
@@ -237,29 +227,6 @@ namespace PKHeX.Drawing
             byte g = (byte)((color.G * amount) + (backColor.G * (1 - amount)));
             byte b = (byte)((color.B * amount) + (backColor.B * (1 - amount)));
             return Color.FromArgb(r, g, b);
-        }
-
-        // https://stackoverflow.com/a/24199315
-        public static Bitmap ResizeImage(Image image, int width, int height)
-        {
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height);
-
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-            using var wrapMode = new ImageAttributes();
-            wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-
-            using var graphics = Graphics.FromImage(destImage);
-            graphics.CompositingMode = CompositingMode.SourceCopy;
-            graphics.CompositingQuality = CompositingQuality.HighQuality;
-            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-
-            return destImage;
         }
     }
 }

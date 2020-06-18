@@ -3,7 +3,7 @@
     /// <summary>
     /// Common Encounter Properties base interface.
     /// </summary>
-    public interface IEncounterable
+    public interface IEncounterable : IVersion
     {
         int Species { get; }
         int Form { get; }
@@ -12,9 +12,10 @@
         bool EggEncounter { get; }
         int LevelMin { get; }
         int LevelMax { get; }
+        int Generation { get; }
 
-        PKM ConvertToPKM(ITrainerInfo SAV);
-        PKM ConvertToPKM(ITrainerInfo SAV, EncounterCriteria criteria);
+        PKM ConvertToPKM(ITrainerInfo sav);
+        PKM ConvertToPKM(ITrainerInfo sav, EncounterCriteria criteria);
     }
 
     public static partial class Extensions

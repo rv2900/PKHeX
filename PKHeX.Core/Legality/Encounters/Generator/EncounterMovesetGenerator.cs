@@ -117,7 +117,7 @@ namespace PKHeX.Core
         public static IEnumerable<IEncounterable> GenerateVersionEncounters(PKM pk, IEnumerable<int> moves, GameVersion version)
         {
             pk.Version = (int)version;
-            var et = EvolutionTree.GetEvolutionTree(pk, pk.Species <= Legal.MaxSpeciesID_7_USUM ? 7 : PKX.Generation); // temp workaround as G8 doesn't have all evolutions
+            var et = EvolutionTree.GetEvolutionTree(pk.Format);
             var dl = et.GetValidPreEvolutions(pk, maxLevel: 100, skipChecks: true);
             int[] needs = GetNeededMoves(pk, moves, dl);
 
@@ -143,9 +143,10 @@ namespace PKHeX.Core
                 // Any egg move can be obtained
                 var evo = dl[dl.Count - 1];
                 var shared = MoveEgg.GetEggMoves(8, evo.Species, evo.Form, GameVersion.SW);
-                return moves.Concat(shared);
+                if (shared.Length != 0)
+                    moves = moves.Concat(shared);
             }
-            if (dl[0].Species == (int)Species.Shedinja)
+            if (pk.Species == (int)Species.Shedinja)
             {
                 // Leveling up Nincada in Gen3/4 levels up, evolves to Ninjask, applies moves for Ninjask, then spawns Shedinja with the current moveset.
                 // Future games spawn the Shedinja before doing Ninjask moves, so this is a special case.

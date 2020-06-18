@@ -268,9 +268,9 @@ namespace PKHeX.Core
         /// <summary>
         /// Shuffles an 80 byte format Generation 3 Pokémon byte array.
         /// </summary>
-        /// <param name="data">Unshuffled data.</param>
+        /// <param name="data">Un-shuffled data.</param>
         /// <param name="sv">Block order shuffle value</param>
-        /// <returns>Unshuffled  data.</returns>
+        /// <returns>Un-shuffled  data.</returns>
         private static byte[] ShuffleArray3(byte[] data, uint sv)
         {
             byte[] sdata = (byte[])data.Clone();
@@ -349,13 +349,13 @@ namespace PKHeX.Core
 
         public static void DecryptIfEncrypted67(ref byte[] pkm)
         {
-            if (BitConverter.ToUInt16(pkm, 0xC8) != 0 && BitConverter.ToUInt16(pkm, 0x58) != 0)
+            if (BitConverter.ToUInt16(pkm, 0xC8) != 0 || BitConverter.ToUInt16(pkm, 0x58) != 0)
                 pkm = DecryptArray6(pkm);
         }
 
         public static void DecryptIfEncrypted8(ref byte[] pkm)
         {
-            if (BitConverter.ToUInt16(pkm, 0x70) != 0 && BitConverter.ToUInt16(pkm, 0xC0) != 0)
+            if (BitConverter.ToUInt16(pkm, 0x70) != 0 || BitConverter.ToUInt16(pkm, 0xC0) != 0)
                 pkm = DecryptArray8(pkm);
         }
     }

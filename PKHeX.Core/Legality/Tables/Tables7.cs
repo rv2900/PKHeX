@@ -562,6 +562,11 @@ namespace PKHeX.Core
             711 + (1 << 11), //Gourgeist-Small
             710 + (2 << 11), //Pumpkaboo-Large
             711 + (2 << 11), //Gourgeist-Large
+
+            // Same abilities (1/2/H), not available as H
+            (int)Species.Honedge,
+            (int)Species.Doublade,
+            (int)Species.Aegislash,
         };
 
         internal static readonly HashSet<int> Ban_NoHidden7Apricorn = new HashSet<int>
@@ -635,6 +640,7 @@ namespace PKHeX.Core
             588, // Relic Band
             589, // Relic Statue
             590, // Relic Crown
+            699, // Discount Coupon
             715, // Fairy Gem
         };
         #endregion

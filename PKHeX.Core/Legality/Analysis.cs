@@ -318,6 +318,8 @@ namespace PKHeX.Core
             if (pkm.Format <= 6 && pkm.Format >= 4)
                 EncounterType.Verify(this); // Gen 6->7 transfer deletes encounter type data
 
+            Contest.Verify(this);
+
             if (pkm.Format < 6)
                 return;
 
@@ -332,13 +334,18 @@ namespace PKHeX.Core
 
             HyperTraining.Verify(this);
             Misc.VerifyVersionEvolution(this);
+
+            if (pkm.Format < 8)
+                return;
+
+            Mark.Verify(this);
         }
 
         private string GetLegalityReport()
         {
             if (Valid)
                 return L_ALegal;
-            if (!Parsed || Info == null)
+            if (!Parsed)
                 return L_AnalysisUnavailable;
 
             var lines = new List<string>();
@@ -368,7 +375,7 @@ namespace PKHeX.Core
 
         private string GetVerboseLegalityReport()
         {
-            if (!Parsed || Info == null)
+            if (!Parsed)
                 return L_AnalysisUnavailable;
 
             const string separator = "===";
@@ -417,7 +424,6 @@ namespace PKHeX.Core
                 Info.PIDIV = MethodFinder.Analyze(pkm);
 
             var pidiv = Info.PIDIV;
-            if (pidiv != null)
             {
                 if (!pidiv.NoSeed)
                     lines.Add(string.Format(L_FOriginSeed_0, pidiv.OriginSeed.ToString("X8")));
@@ -437,7 +443,7 @@ namespace PKHeX.Core
         /// </summary>
         public IReadOnlyList<int> GetSuggestedRelearn()
         {
-            if (Info?.RelearnBase == null || Info.Generation < 6)
+            if (Info.RelearnBase.Count == 0 || Info.Generation < 6)
                 return new int[4];
 
             if (!EncounterMatch.EggEncounter)
@@ -472,7 +478,7 @@ namespace PKHeX.Core
                 if (Info.Generation <= 2)
                 {
                     var lvl = pkm.Format >= 7 ? pkm.Met_Level : pkm.CurrentLevel;
-                    var ver = EncounterOriginal is IVersion v ? v.Version : (GameVersion)pkm.Version;
+                    var ver = EncounterOriginal.Version;
                     return MoveLevelUp.GetEncounterMoves(EncounterOriginal.Species, 0, lvl, ver);
                 }
                 if (pkm.Species == EncounterOriginal.Species)

@@ -355,11 +355,11 @@ namespace PKHeX.WinForms.Controls
                 return;
             if (!tabBoxMulti.GetTabRect(tabBoxMulti.SelectedIndex).Contains(PointToClient(MousePosition)))
                 return;
-            if (!e.Button.HasFlag(MouseButtons.Right))
+            if ((e.Button & MouseButtons.Right) == 0)
             {
-                if (ModifierKeys.HasFlag(Keys.Alt))
+                if ((ModifierKeys & Keys.Alt) != 0)
                     SortMenu.Clear();
-                else if (ModifierKeys.HasFlag(Keys.Control))
+                else if ((ModifierKeys & Keys.Control) != 0)
                     SortMenu.Sort();
                 return;
             }
@@ -620,10 +620,41 @@ namespace PKHeX.WinForms.Controls
 
         private void B_Blocks_Click(object sender, EventArgs e)
         {
-            if (!(SAV is SAV8SWSH swsh))
+            var form = GetAccessorForm(SAV);
+            if (form == null)
                 return;
-            using var form = new SAV_BlockDump8(swsh);
             form.ShowDialog();
+            form.Dispose();
+        }
+
+        private static Form GetAccessorForm(SaveFile sav)
+        {
+            return sav switch
+            {
+                SAV5BW s => new SAV_Accessor<SaveBlockAccessor5BW>(s.Blocks),
+                SAV5B2W2 s => new SAV_Accessor<SaveBlockAccessor5B2W2>(s.Blocks),
+                SAV6XY s => new SAV_Accessor<SaveBlockAccessor6XY>(s.Blocks),
+                SAV6AO s => new SAV_Accessor<SaveBlockAccessor6AO>(s.Blocks),
+                SAV6AODemo s => new SAV_Accessor<SaveBlockAccessor6AODemo>(s.Blocks),
+                SAV7SM s => new SAV_Accessor<SaveBlockAccessor7SM>(s.Blocks),
+                SAV7USUM s => new SAV_Accessor<SaveBlockAccessor7USUM>(s.Blocks),
+                SAV8SWSH s => new SAV_BlockDump8(s),
+                _ => GetPropertyForm(sav),
+            };
+        }
+
+        private static Form GetPropertyForm(SaveFile sav)
+        {
+            var form = new Form
+            {
+                Text = "Simple Editor",
+                MinimumSize = new Size(350, 380),
+                MinimizeBox = false,
+                MaximizeBox = false
+            };
+            var pg = new PropertyGrid {SelectedObject = sav, Dock = DockStyle.Fill};
+            form.Controls.Add(pg);
+            return form;
         }
 
         private void B_OpenOPowers_Click(object sender, EventArgs e)
@@ -1105,7 +1136,8 @@ namespace PKHeX.WinForms.Controls
                 B_OpenRTCEditor.Enabled = sav.Generation == 2 || (sav is SAV3 s3 && (s3.RS || s3.E));
                 B_MailBox.Enabled = sav is SAV2 || sav is SAV3 || sav is SAV4 || sav is SAV5;
 
-                B_Raids.Enabled = B_Blocks.Enabled = sav is SAV8SWSH;
+                B_Raids.Enabled = sav is SAV8SWSH;
+                B_Blocks.Enabled = true;
 
                 SL_Extra.SAV = sav;
                 SL_Extra.Initialize(sav.GetExtraSlots(HaX), InitializeDragDrop);
@@ -1187,12 +1219,13 @@ namespace PKHeX.WinForms.Controls
                 sav => (ModifierKeys & Keys.Control) != 0 ? sav.BoxData : sav.GetBoxData(CurrentBox));
         }
 
-        private static void ExportShowdownText(SaveFile SAV, string success, Func<SaveFile, IEnumerable<PKM>> func)
+        private static void ExportShowdownText(SaveFile sav, string success, Func<SaveFile, IEnumerable<PKM>> fetch)
         {
-            var pkms = func(SAV);
-            var str = ShowdownSet.GetShowdownSets(pkms, Environment.NewLine + Environment.NewLine);
-            if (string.IsNullOrWhiteSpace(str)) return;
-            if (WinFormsUtil.SetClipboardText(str))
+            var list = fetch(sav);
+            var result = ShowdownSet.GetShowdownSets(list, Environment.NewLine + Environment.NewLine);
+            if (string.IsNullOrWhiteSpace(result))
+                return;
+            if (WinFormsUtil.SetClipboardText(result))
                 WinFormsUtil.Alert(success);
         }
 

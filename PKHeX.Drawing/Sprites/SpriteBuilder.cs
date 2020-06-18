@@ -23,6 +23,7 @@ namespace PKHeX.Drawing
         public abstract Bitmap Delete { get; }
         public abstract Bitmap Transparent { get; }
         public abstract Bitmap Drag { get; }
+        public abstract Bitmap UnknownItem { get; }
 
         private const double UnknownFormTransparency = 0.5;
         private const double ShinyTransparency = 0.7;
@@ -31,8 +32,9 @@ namespace PKHeX.Drawing
         protected virtual string GetSpriteStringSpeciesOnly(int species) => $"_{species}";
         protected virtual string GetSpriteAll(int species, int form, int gender, uint formarg, bool shiny, int generation) => SpriteName.GetResourceStringSprite(species, form, gender, formarg, generation, shiny);
         protected virtual string GetItemResourceName(int item) => $"item_{item}";
-        protected virtual Image Unknown => Resources.unknown;
-        protected virtual Image GetEggSprite(int species) => species == (int)Species.Manaphy ? Resources._490_e : Resources.egg;
+        protected virtual Bitmap Unknown => Resources.unknown;
+        protected virtual Bitmap GetEggSprite(int species) => species == (int)Species.Manaphy ? Resources._490_e : Resources.egg;
+        public abstract Bitmap ShadowLugia { get; }
 
         public void Initialize(SaveFile sav)
         {
@@ -121,7 +123,7 @@ namespace PKHeX.Drawing
 
         private Image LayerOverImageItem(Image baseImage, int item, int generation)
         {
-            Image itemimg = (Image?)Resources.ResourceManager.GetObject(GetItemResourceName(item)) ?? Resources.helditem;
+            Image itemimg = (Image?)Resources.ResourceManager.GetObject(GetItemResourceName(item)) ?? UnknownItem;
             if (2 <= generation && generation <= 4 && 328 <= item && item <= 419) // gen2/3/4 TM
                 itemimg = Resources.item_tm;
             else if (generation >= 8 && (1130 <= item && item <= 1229)) // Gen8 TR
@@ -187,6 +189,8 @@ namespace PKHeX.Drawing
         public override Bitmap Delete => Resources.slotDel;
         public override Bitmap Transparent => Resources.slotTrans;
         public override Bitmap Drag => Resources.slotDrag;
+        public override Bitmap UnknownItem => Resources.helditem;
+        public override Bitmap ShadowLugia => Resources._249x;
     }
 
     /// <summary>
@@ -198,7 +202,7 @@ namespace PKHeX.Drawing
         public override int Width => 68;
 
         protected override int ItemShiftX => 52;
-        protected override int ItemShiftY => 28;
+        protected override int ItemShiftY => 24;
         protected override int ItemMaxSize => 32;
         protected override int EggItemShiftX => 32;
         protected override int EggItemShiftY => 26;
@@ -206,8 +210,8 @@ namespace PKHeX.Drawing
         protected override string GetSpriteStringSpeciesOnly(int species) => 'b' + $"_{species}";
         protected override string GetSpriteAll(int species, int form, int gender, uint formarg, bool shiny, int generation) => 'b' + SpriteName.GetResourceStringSprite(species, form, gender, formarg, generation, shiny);
         protected override string GetItemResourceName(int item) => 'b' + $"item_{item}";
-        protected override Image Unknown => Resources.b_0;
-        protected override Image GetEggSprite(int species) => Resources.egg; // no manaphy egg sprite (yet)
+        protected override Bitmap Unknown => Resources.b_0;
+        protected override Bitmap GetEggSprite(int species) => Resources.egg; // no manaphy egg sprite (yet)
 
         public override Bitmap Hover => Resources.slotHover68;
         public override Bitmap View => Resources.slotView68;
@@ -215,5 +219,7 @@ namespace PKHeX.Drawing
         public override Bitmap Delete => Resources.slotDel68;
         public override Bitmap Transparent => Resources.slotTrans68;
         public override Bitmap Drag => Resources.slotDrag68;
+        public override Bitmap UnknownItem => Resources.bitem_unk;
+        public override Bitmap ShadowLugia => Resources.b_249x;
     }
 }

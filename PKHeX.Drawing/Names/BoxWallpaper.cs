@@ -92,8 +92,11 @@ namespace PKHeX.Drawing
                         20 => true, // Special5 Flare/Magma
                         _ => false
                     };
-                case 8: // todo swsh
-                    return true;
+                case 8:
+                    return wallpaperID switch
+                    {
+                        _ => true, // Bad contrast with lots of void space, better to just highlight the shiny red.
+                    };
                 default:
                     return false;
             }

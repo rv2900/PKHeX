@@ -97,7 +97,7 @@ namespace PKHeX.WinForms.Controls
         public bool Unicode { get; set; } = true;
         private bool _hax;
         public bool HaX { get => _hax; set => _hax = Stats.HaX = value; }
-        public byte[] LastData { private get; set; }
+        private byte[] LastData = Array.Empty<byte>();
 
         public PKM Data { get => Entity; set => Entity = value; }
         public PKM Entity { get; private set; }
@@ -120,7 +120,7 @@ namespace PKHeX.WinForms.Controls
 
         private readonly PictureBox[] movePB, relearnPB;
         public SaveFile RequestSaveFile => SaveFileRequested?.Invoke(this, EventArgs.Empty);
-        public bool PKMIsUnsaved => FieldsLoaded && LastData?.Any(b => b != 0) == true && !LastData.SequenceEqual(CurrentPKM.Data);
+        public bool PKMIsUnsaved => FieldsLoaded && LastData.Any(b => b != 0) && !LastData.SequenceEqual(CurrentPKM.Data);
 
         private readonly ComboBox[] Moves, Relearn, ValidationRequired, PPUps;
         private readonly MaskedTextBox[] MovePP;
@@ -267,7 +267,7 @@ namespace PKHeX.WinForms.Controls
             SetMarkings();
             UpdateLegality();
             UpdateSprite();
-            LastData = PreparePKM()?.Data;
+            LastData = PreparePKM().Data;
         }
 
         public void UpdateLegality(LegalityAnalysis la = null, bool skipMoveRepop = false)
@@ -288,7 +288,7 @@ namespace PKHeX.WinForms.Controls
             var moves = Entity.Moves;
             for (int i = 0; i < 4; i++)
             {
-                bool invalid = !Legality.Info?.Moves[i].Valid ?? false;
+                bool invalid = !Legality.Info.Moves[i].Valid;
 
                 Bitmap img;
                 if (invalid)
@@ -304,7 +304,7 @@ namespace PKHeX.WinForms.Controls
             if (Entity.Format >= 6)
             {
                 for (int i = 0; i < 4; i++)
-                    relearnPB[i].Visible = !Legality.Info?.Relearn[i].Valid ?? false;
+                    relearnPB[i].Visible = !Legality.Info.Relearn[i].Valid;
             }
 
             if (skipMoveRepop)
@@ -497,7 +497,7 @@ namespace PKHeX.WinForms.Controls
                 return Properties.Resources.gen_vc;
             if (pkm.GO)
                 return Properties.Resources.gen_go;
-            if (pkm.GG) // LGP/E -- GO already returned above.
+            if (pkm.LGPE)
                 return Properties.Resources.gen_gg;
 
             // Lumped Generations
@@ -580,8 +580,8 @@ namespace PKHeX.WinForms.Controls
 
         private void ClickPPUps(object sender, EventArgs e)
         {
-            bool min = ModifierKeys.HasFlag(Keys.Control);
-            static int getValue(ComboBox cb, bool zero) => zero || WinFormsUtil.GetIndex(cb) == 0 ? 0 : 3;
+            bool min = (ModifierKeys & Keys.Control) != 0;
+            static int getValue(ListControl cb, bool zero) => zero || WinFormsUtil.GetIndex(cb) == 0 ? 0 : 3;
             CB_PPu1.SelectedIndex = getValue(CB_Move1, min);
             CB_PPu2.SelectedIndex = getValue(CB_Move2, min);
             CB_PPu3.SelectedIndex = getValue(CB_Move3, min);
@@ -620,12 +620,12 @@ namespace PKHeX.WinForms.Controls
         private void ClickBall(object sender, EventArgs e)
         {
             Entity.Ball = WinFormsUtil.GetIndex(CB_Ball);
-            if (ModifierKeys.HasFlag(Keys.Alt))
+            if ((ModifierKeys & Keys.Alt) != 0)
             {
                 CB_Ball.SelectedValue = (int)Ball.Poke;
                 return;
             }
-            if (ModifierKeys.HasFlag(Keys.Shift))
+            if ((ModifierKeys & Keys.Shift) != 0)
             {
                 CB_Ball.SelectedValue = BallApplicator.ApplyBallLegalByColor(Entity);
                 return;
@@ -703,8 +703,8 @@ namespace PKHeX.WinForms.Controls
 
         private bool SetSuggestedMoves(bool random = false, bool silent = false)
         {
-            int[] m = Entity.GetMoveSet(random);
-            if (m.Any(z => z != 0) != true)
+            var m = Entity.GetMoveSet(random);
+            if (m.All(z => z == 0) || m.Length == 0)
             {
                 if (!silent)
                     WinFormsUtil.Alert(MsgPKMSuggestionFormat);
@@ -1435,7 +1435,7 @@ namespace PKHeX.WinForms.Controls
             {
                 if (PID)
                 {
-                    CommonEdits.SetShiny(Entity, ModifierKeys == Keys.Shift);
+                    CommonEdits.SetShiny(Entity, ModifierKeys == Keys.Shift ? Shiny.AlwaysSquare : Shiny.AlwaysStar);
                     TB_PID.Text = Entity.PID.ToString("X8");
 
                     int gen = Entity.GenNumber;
@@ -1844,9 +1844,9 @@ namespace PKHeX.WinForms.Controls
         }
 
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
-        public Action<ShowdownSet> LoadShowdownSet;
+        public Action<IBattleTemplate> LoadShowdownSet;
 
-        private void LoadShowdownSetDefault(ShowdownSet Set)
+        private void LoadShowdownSetDefault(IBattleTemplate Set)
         {
             var pk = PreparePKM();
             pk.ApplySetDetails(Set);

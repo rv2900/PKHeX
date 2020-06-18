@@ -54,12 +54,12 @@ namespace PKHeX.Core
         public const int SIZE_G4RANCH = 0x54000;
         public const int SIZE_G4RANCH_PLAT = 0x7C000;
 
-        private static readonly HashSet<int> SIZES_2 = new HashSet<int>
+        private static readonly HashSet<int> SizesGen2 = new HashSet<int>
         {
             SIZE_G2RAW_U, SIZE_G2VC_U, SIZE_G2BAT_U, SIZE_G2EMU_U, SIZE_G2RAW_J, SIZE_G2BAT_J, SIZE_G2EMU_J, SIZE_G2VC_J,
         };
 
-        private static readonly HashSet<int> SIZES = new HashSet<int>(SIZES_2)
+        private static readonly HashSet<int> Sizes = new HashSet<int>(SizesGen2)
         {
             SIZE_G8SWSH, SIZE_G8SWSH_1,
             SIZE_G7SM, SIZE_G7USUM, SIZE_G7GG,
@@ -175,7 +175,7 @@ namespace PKHeX.Core
         /// <returns>Version Identifier or Invalid if type cannot be determined.</returns>
         internal static GameVersion GetIsG2SAV(byte[] data)
         {
-            if (!SIZES_2.Contains(data.Length))
+            if (!SizesGen2.Contains(data.Length))
                 return Invalid;
 
             // Check if it's not an International, Japanese, or Korean save file
@@ -237,26 +237,26 @@ namespace PKHeX.Core
             int count = data.Length/SIZE_G3RAWHALF;
             for (int s = 0; s < count; s++)
             {
-                const int blockcount = 14;
-                const int blocksize = 0x1000;
-                int ofs = blockcount * blocksize * s;
-                int[] BlockOrder = new int[blockcount];
-                for (int i = 0; i < BlockOrder.Length; i++)
-                    BlockOrder[i] = BitConverter.ToUInt16(data, (i * blocksize) + 0xFF4 + ofs);
+                const int blockCount = 14;
+                const int blockSize = 0x1000;
+                int ofs = blockCount * blockSize * s;
+                int[] order = new int[blockCount];
+                for (int i = 0; i < order.Length; i++)
+                    order[i] = BitConverter.ToUInt16(data, (i * blockSize) + 0xFF4 + ofs);
 
-                if (Array.FindIndex(BlockOrder, i => i > 0xD) >= 0) // invalid block ID
+                if (Array.FindIndex(order, i => i > 0xD) >= 0) // invalid block ID
                     continue;
 
-                int Block0 = Array.IndexOf(BlockOrder, 0);
+                int block0 = Array.IndexOf(order, 0);
 
                 // Sometimes not all blocks are present (start of game), yielding multiple block0's.
                 // Real 0th block comes before block1.
-                if (BlockOrder[0] == 1 && Block0 != BlockOrder.Length - 1)
+                if (order[0] == 1 && block0 != order.Length - 1)
                     continue;
-                if (Array.FindIndex(BlockOrder, v => v != 0) < 0) // all blocks are 0
+                if (Array.FindIndex(order, v => v != 0) < 0) // all blocks are 0
                     continue;
                 // Detect RS/E/FRLG
-                return SAV3.GetVersion(data, (blocksize * Block0) + ofs);
+                return SAV3.GetVersion(data, (blockSize  * block0) + ofs);
             }
             return Invalid;
         }
@@ -333,7 +333,7 @@ namespace PKHeX.Core
                 return Invalid;
 
             // The block footers contain a u32 'size' followed by a u32 binary-coded-decimal timestamp(?)
-            // Korean savegames have a different timestamp from other localizations.
+            // Korean saves have a different timestamp from other localizations.
             bool validSequence(int offset)
             {
                 var size = BitConverter.ToUInt32(data, offset - 0xC);
@@ -453,7 +453,9 @@ namespace PKHeX.Core
         private static bool GetIsBank7(byte[] data) => data.Length == SIZE_G7BANK && data[0] != 0;
         private static bool GetIsBank4(byte[] data) => data.Length == SIZE_G4BANK && BitConverter.ToUInt32(data, 0x3FC00) != 0; // box name present
         private static bool GetIsBank3(byte[] data) => data.Length == SIZE_G4BANK && BitConverter.ToUInt32(data, 0x3FC00) == 0; // size collision with ^
-        private static bool GetIsRanch4(byte[] data) => (data.Length == SIZE_G4RANCH && BigEndian.ToUInt32(data, 0x22AC) != 0) || (data.Length == SIZE_G4RANCH_PLAT && BigEndian.ToUInt32(data, 0x268C) != 0);
+        private static bool GetIsRanchDP(byte[] data) => data.Length == SIZE_G4RANCH && BigEndian.ToUInt32(data, 0x22AC) != 0;
+        private static bool GetIsRanchPlat(byte[] data) => data.Length == SIZE_G4RANCH_PLAT && BigEndian.ToUInt32(data, 0x268C) != 0;
+        private static bool GetIsRanch4(byte[] data) => GetIsRanchDP(data) || GetIsRanchPlat(data);
 
         /// <summary>Creates an instance of a SaveFile using the given save data.</summary>
         /// <param name="path">File location from which to create a SaveFile.</param>
@@ -462,7 +464,9 @@ namespace PKHeX.Core
         {
             var data = File.ReadAllBytes(path);
             var sav = GetVariantSAV(data);
-            sav?.SetFileInfo(path);
+            if (sav == null)
+                return null;
+            sav.SetFileInfo(path);
             return sav;
         }
 
@@ -524,19 +528,19 @@ namespace PKHeX.Core
             }
         }
 
-        public static SaveFile? GetVariantSAV(SAV3GCMemoryCard MC)
+        public static SaveFile? GetVariantSAV(SAV3GCMemoryCard memCard)
         {
             // Pre-check for header/footer signatures
             SaveFile sav;
-            byte[] data = MC.SelectedSaveData;
+            byte[] data = memCard.SelectedSaveData;
             CheckHeaderFooter(ref data, out var header, out var footer);
 
-            switch (MC.SelectedGameVersion)
+            switch (memCard.SelectedGameVersion)
             {
                 // Side Games
-                case COLO: sav = new SAV3Colosseum(data, MC); break;
-                case XD: sav = new SAV3XD(data, MC); break;
-                case RSBOX: sav = new SAV3RSBox(data, MC); break;
+                case COLO: sav = new SAV3Colosseum(data, memCard); break;
+                case XD: sav = new SAV3XD(data, memCard); break;
+                case RSBOX: sav = new SAV3RSBox(data, memCard); break;
 
                 // No pattern matched
                 default: return null;
@@ -549,14 +553,14 @@ namespace PKHeX.Core
         /// <summary>
         /// Creates an instance of a SaveFile with a blank base.
         /// </summary>
-        /// <param name="Game">Version to create the save file for.</param>
-        /// <param name="OT">Trainer Name</param>
+        /// <param name="game">Version to create the save file for.</param>
+        /// <param name="trainerName">Trainer Name</param>
         /// <returns>Blank save file from the requested game, null if no game exists for that <see cref="GameVersion"/>.</returns>
-        public static SaveFile GetBlankSAV(GameVersion Game, string OT)
+        public static SaveFile GetBlankSAV(GameVersion game, string trainerName)
         {
-            var SAV = GetBlankSAV(Game);
-            SAV.Game = (int)Game;
-            SAV.OT = OT;
+            var SAV = GetBlankSAV(game);
+            SAV.Game = (int)game;
+            SAV.OT = trainerName;
 
             // Secondary Properties may not be used but can be filled in as template.
             SAV.TID = 12345;
@@ -577,15 +581,15 @@ namespace PKHeX.Core
         /// <summary>
         /// Creates an instance of a SaveFile with a blank base.
         /// </summary>
-        /// <param name="Game">Version to create the save file for.</param>
+        /// <param name="game">Version to create the save file for.</param>
         /// <returns>Blank save file from the requested game, null if no game exists for that <see cref="GameVersion"/>.</returns>
-        private static SaveFile GetBlankSAV(GameVersion Game)
+        private static SaveFile GetBlankSAV(GameVersion game)
         {
-            switch (Game)
+            switch (game)
             {
                 case RD: case BU: case GN: case YW:
                 case RBY:
-                    return new SAV1(version: Game);
+                    return new SAV1(version: game);
 
                 case GS: case GD: case SV:
                     return new SAV2(version: GS);
@@ -593,7 +597,7 @@ namespace PKHeX.Core
                     return new SAV2(version: C);
 
                 case R: case S: case E: case FR: case LG:
-                    return new SAV3(version: Game);
+                    return new SAV3(version: game);
                 case FRLG:
                     return new SAV3(version: FR);
                 case RS:
@@ -641,7 +645,7 @@ namespace PKHeX.Core
                     return new SAV8SWSH();
 
                 default:
-                    throw new ArgumentException(nameof(Game));
+                    throw new ArgumentException(nameof(game));
             }
         }
 
@@ -649,12 +653,12 @@ namespace PKHeX.Core
         /// Creates an instance of a SaveFile with a blank base.
         /// </summary>
         /// <param name="generation">Generation of the Save File.</param>
-        /// <param name="OT">Trainer Name</param>
+        /// <param name="trainerName">Trainer Name</param>
         /// <returns>Save File for that generation.</returns>
-        public static SaveFile GetBlankSAV(int generation, string OT)
+        public static SaveFile GetBlankSAV(int generation, string trainerName)
         {
             var ver = GameUtil.GetVersion(generation);
-            return GetBlankSAV(ver, OT);
+            return GetBlankSAV(ver, trainerName);
         }
 
         /// <summary>
@@ -675,14 +679,14 @@ namespace PKHeX.Core
             {
                 var searchOption = deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
                 // force evaluation so that an invalid path will throw before we return true/false.
-                // EnumerateFiles throws an exception while iterating, which won't be caught by the trycatch here.
+                // EnumerateFiles throws an exception while iterating, which won't be caught by the try-catch here.
                 var files = Directory.GetFiles(folderPath, "*", searchOption);
-                static int safelen(string file)
+                static int GetFileSize(string file)
                 {
                     try { return (int) new FileInfo(file).Length; }
                     catch { return -1; } // Bad File / Locked
                 }
-                result = files.Where(f => IsSizeValid(safelen(f)));
+                result = files.Where(f => IsSizeValid(GetFileSize(f)));
                 return true;
             }
             catch (ArgumentException)
@@ -693,11 +697,11 @@ namespace PKHeX.Core
         }
 
         /// <summary>
-        /// Determines whether the save data size is valid for autodetecting saves.
+        /// Determines whether the save data size is valid for automatically detecting saves.
         /// </summary>
         /// <param name="size">Size in bytes of the save data</param>
         /// <returns>A boolean indicating whether or not the save data size is valid.</returns>
-        public static bool IsSizeValid(int size) => SIZES.Contains(size);
+        public static bool IsSizeValid(int size) => Sizes.Contains(size);
 
         /// <summary>
         /// Checks the provided <see cref="input"/> and pulls out any <see cref="header"/> and/or <see cref="footer"/> arrays.

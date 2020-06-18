@@ -28,7 +28,7 @@ namespace PKHeX.Core
                 if (i == 16) // Watchtower, special
                     continue;
                 var star = (byte)rnd.Next(0, 5);
-                var rand = (byte)rnd.Next(0, 100);
+                var rand = (byte)rnd.Next(1, 101);
                 GetRaid(i).Activate(star, rand, rare, isEvent);
             }
         }
@@ -80,7 +80,7 @@ namespace PKHeX.Core
             set => Data[Offset + 0x10] = value;
         }
 
-        [Category(General), Description("Random value which picks out the encounter from the Raid data table (0-99).")]
+        [Category(General), Description("Random value which picks out the encounter from the Raid data table (1-100).")]
         public byte RandRoll
         {
             get => Data[Offset + 0x11];

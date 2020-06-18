@@ -9,10 +9,10 @@
     <Authors>Kaphotics</Authors>
     <Product>PKHeX</Product>
     <Description>Pokémon Save Editor</Description>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     <StartupObject>PKHeX.WinForms.Program</StartupObject>
     <AssemblyName>PKHeX</AssemblyName>
-    <Version>20.03.14</Version>
+    <Version>20.04.14</Version>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
 
@@ -68,6 +68,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Update="Subforms\PKM Editors\TechRecordEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Subforms\Save Editors\Misc\SAV_Accessor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Subforms\Save Editors\Gen8\SAV_BlockDump8.cs">

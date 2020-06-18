@@ -43,8 +43,13 @@ namespace PKHeX.Core
             if (pkm.Format < 6)
                 return VerifyAbility345(data, abilities, abilval);
 
+            // Check AbilityNumber is a single set bit
+            var num = pkm.AbilityNumber;
+            if (num == 0 || num == 0b101 || num == 0b110 || num == 0b011)
+                return GetInvalid(LAbilityMismatchFlag);
+
             // Check AbilityNumber points to ability
-            int an = pkm.AbilityNumber >> 1;
+            int an = num >> 1;
             if (an >= abilities.Length || abilities[an] != ability)
                 return GetInvalid(LAbilityMismatchFlag);
 
@@ -101,7 +106,7 @@ namespace PKHeX.Core
         private CheckResult VerifyFixedAbility(LegalityAnalysis data, IReadOnlyList<int> abilities, AbilityState state, int EncounterAbility, int abilval)
         {
             var pkm = data.pkm;
-            if (data.Info.EncounterMatch is IGeneration g && g.Generation >= 6)
+            if (data.Info.EncounterMatch.Generation >= 6)
             {
                 if (IsAbilityCapsuleModified(pkm, abilities, EncounterAbility))
                     return GetValid(LAbilityCapsuleUsed);

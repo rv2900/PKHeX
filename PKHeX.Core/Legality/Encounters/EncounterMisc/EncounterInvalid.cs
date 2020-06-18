@@ -14,6 +14,8 @@ namespace PKHeX.Core
         public int LevelMin { get; }
         public int LevelMax { get; }
         public bool EggEncounter { get; }
+        public int Generation { get; }
+        public GameVersion Version { get; }
 
         public string Name => "Invalid";
         public string LongName => "Invalid";
@@ -27,9 +29,11 @@ namespace PKHeX.Core
             LevelMin = pkm.Met_Level;
             LevelMax = pkm.CurrentLevel;
             EggEncounter = pkm.WasEgg;
+            Generation = pkm.GenNumber;
+            Version = (GameVersion)pkm.Version;
         }
 
-        public PKM ConvertToPKM(ITrainerInfo SAV) => ConvertToPKM(SAV, EncounterCriteria.Unrestricted);
-        public PKM ConvertToPKM(ITrainerInfo SAV, EncounterCriteria criteria) => throw new ArgumentException($"Cannot convert an {nameof(EncounterInvalid)} to PKM.");
+        public PKM ConvertToPKM(ITrainerInfo sav) => ConvertToPKM(sav, EncounterCriteria.Unrestricted);
+        public PKM ConvertToPKM(ITrainerInfo sav, EncounterCriteria criteria) => throw new ArgumentException($"Cannot convert an {nameof(EncounterInvalid)} to PKM.");
     }
 }

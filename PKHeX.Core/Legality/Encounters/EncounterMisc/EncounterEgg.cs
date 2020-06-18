@@ -6,7 +6,7 @@ namespace PKHeX.Core
     /// <summary>
     /// Egg Encounter Data
     /// </summary>
-    public class EncounterEgg : IEncounterable, IVersion
+    public class EncounterEgg : IEncounterable
     {
         public int Species { get; }
         public int Form { get; }
@@ -16,58 +16,55 @@ namespace PKHeX.Core
         public int LevelMin => Level;
         public int LevelMax => Level;
         public readonly int Level;
+        public int Generation { get; }
+        public GameVersion Version { get; }
 
-        public EncounterEgg(int species, int form, int level)
+        public EncounterEgg(int species, int form, int level, int gen, GameVersion game)
         {
             Species = species;
             Form = form;
             Level = level;
+            Generation = gen;
+            Version = game;
         }
 
-        public GameVersion Version { get; set; }
+        public PKM ConvertToPKM(ITrainerInfo sav) => ConvertToPKM(sav, EncounterCriteria.Unrestricted);
 
-        public PKM ConvertToPKM(ITrainerInfo SAV) => ConvertToPKM(SAV, EncounterCriteria.Unrestricted);
-
-        public PKM ConvertToPKM(ITrainerInfo SAV, EncounterCriteria criteria)
+        public PKM ConvertToPKM(ITrainerInfo sav, EncounterCriteria criteria)
         {
-            int gen = Version.GetGeneration();
+            int gen = Generation;
             var version = Version;
-            if (gen < 2)
-            {
-                gen = 2;
-                version = GameVersion.C;
-            }
             var pk = PKMConverter.GetBlank(gen, version);
 
-            SAV.ApplyToPKM(pk);
+            sav.ApplyTo(pk);
 
             pk.Species = Species;
-            pk.Nickname = SpeciesName.GetSpeciesNameGeneration(Species, SAV.Language, gen);
+            pk.Nickname = SpeciesName.GetSpeciesNameGeneration(Species, sav.Language, gen);
             pk.CurrentLevel = Level;
             pk.Version = (int)version;
-            pk.Ball = 4;
+            pk.Ball = (int)Ball.Poke;
             pk.OT_Friendship = pk.PersonalInfo.BaseFriendship;
 
             int[] moves = SetEncounterMoves(pk, version);
             SetPINGA(pk, criteria);
 
-            if (pk.Format <= 2 && version != GameVersion.C)
+            if (gen <= 2 && version != GameVersion.C)
                 return pk;
 
             SetMetData(pk);
 
-            if (pk.Format < 3)
+            if (gen < 3)
                 return pk;
 
-            if (pk.GenNumber >= 4)
-                pk.SetEggMetData(version, (GameVersion)SAV.Game);
+            if (gen >= 4)
+                pk.SetEggMetData(version, (GameVersion)sav.Game);
 
-            if (pk.Format < 6)
+            if (gen < 6)
                 return pk;
-            if (pk.Format == 6)
+            if (gen == 6)
                 pk.SetHatchMemory6();
 
-            SetAltForm(pk, SAV);
+            SetAltForm(pk, sav);
 
             pk.SetRandomEC();
             pk.RelearnMoves = moves;
@@ -75,7 +72,7 @@ namespace PKHeX.Core
             return pk;
         }
 
-        private void SetAltForm(PKM pk, ITrainerInfo SAV)
+        private void SetAltForm(PKM pk, ITrainerInfo sav)
         {
             switch (Species)
             {
@@ -85,7 +82,7 @@ namespace PKHeX.Core
                 case (int)Core.Species.Scatterbug:
                 case (int)Core.Species.Spewpa:
                 case (int)Core.Species.Vivillon:
-                    pk.AltForm = Legal.GetVivillonPattern((byte)SAV.Country, (byte)SAV.SubRegion);
+                    pk.AltForm = Legal.GetVivillonPattern((byte)sav.Country, (byte)sav.SubRegion);
                     break;
             }
         }
@@ -147,6 +144,6 @@ namespace PKHeX.Core
     public sealed class EncounterEggSplit : EncounterEgg
     {
         public int OtherSpecies { get; }
-        public EncounterEggSplit(int species, int form, int level, int otherSpecies) : base(species, form, level) => OtherSpecies = otherSpecies;
+        public EncounterEggSplit(int species, int form, int level, int gen, GameVersion game, int otherSpecies) : base(species, form, level, gen, game) => OtherSpecies = otherSpecies;
     }
 }

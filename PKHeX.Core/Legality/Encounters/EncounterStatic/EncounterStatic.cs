@@ -10,7 +10,7 @@ namespace PKHeX.Core
     /// <remarks>
     /// Static Encounters are fixed position encounters with properties that are not subject to Wild Encounter conditions.
     /// </remarks>
-    public class EncounterStatic : IEncounterable, IMoveset, IGeneration, ILocation, IContestStats, IVersion, IRelearn
+    public class EncounterStatic : IEncounterable, IMoveset, IGenerationSet, ILocation, IContestStats, IRelearn, IVersionSet
     {
         public int Species { get; set; }
         public IReadOnlyList<int> Moves { get; set; } = Array.Empty<int>();
@@ -56,20 +56,20 @@ namespace PKHeX.Core
         public string Name => _name;
         public string LongName => Version == GameVersion.Any ? _name : $"{_name} ({Version})";
 
-        public PKM ConvertToPKM(ITrainerInfo SAV) => ConvertToPKM(SAV, EncounterCriteria.Unrestricted);
+        public PKM ConvertToPKM(ITrainerInfo sav) => ConvertToPKM(sav, EncounterCriteria.Unrestricted);
 
-        public PKM ConvertToPKM(ITrainerInfo SAV, EncounterCriteria criteria)
+        public PKM ConvertToPKM(ITrainerInfo sav, EncounterCriteria criteria)
         {
             var pk = PKMConverter.GetBlank(Generation, Version);
-            SAV.ApplyToPKM(pk);
+            sav.ApplyTo(pk);
 
             pk.EncryptionConstant = Util.Rand32();
             pk.Species = Species;
             pk.AltForm = Form;
 
-            int lang = (int)Language.GetSafeLanguage(Generation, (LanguageID)SAV.Language);
+            int lang = (int)Language.GetSafeLanguage(Generation, (LanguageID)sav.Language);
             int level = GetMinimalLevel();
-            var version = this.GetCompatibleVersion((GameVersion)SAV.Game);
+            var version = this.GetCompatibleVersion((GameVersion)sav.Game);
             SanityCheckVersion(ref version);
 
             pk.Language = lang = GetEdgeCaseLanguage(pk, lang);
@@ -84,7 +84,7 @@ namespace PKHeX.Core
             var today = DateTime.Today;
             SetMetData(pk, level, today);
             if (EggEncounter)
-                SetEggMetData(pk, SAV, today);
+                SetEggMetData(pk, sav, today);
 
             SetPINGA(pk, criteria);
             SetEncounterMoves(pk, version, level);
@@ -115,7 +115,7 @@ namespace PKHeX.Core
                 return pk;
 
             pk.SetRelearnMoves(Relearn);
-            SAV.ApplyHandlingTrainerInfo(pk);
+            sav.ApplyHandlingTrainerInfo(pk);
             pk.SetRandomEC();
 
             if (this is IGigantamax g && pk is IGigantamax pg)
@@ -302,9 +302,7 @@ namespace PKHeX.Core
                 var expectForm = pkm.Format == 7 ? Form : FormConverter.GetTotemBaseForm(Species, Form);
                 return expectForm == pkm.AltForm;
             }
-            if (Form != pkm.AltForm && !Legal.IsFormChangeable(pkm, Species))
-                return false;
-            return true;
+            return Form == pkm.AltForm || Legal.IsFormChangeable(pkm, Species, Form);
         }
 
         private bool IsMatchEggLocation(PKM pkm, ref int lvl)
@@ -322,6 +320,8 @@ namespace PKHeX.Core
                 if (pkm.IsEgg)
                 {
                     if (pkm.Met_Location != 0 && pkm.Met_Level != 0)
+                        return false;
+                    if (pkm.OT_Friendship > EggCycles) // Dizzy Punch eggs start with below-normal hatch counters.
                         return false;
                 }
                 else
@@ -367,7 +367,7 @@ namespace PKHeX.Core
                 }
                 else
                 {
-                    if (pkm.Egg_Location != Locations.LinkTrade6) // Link Trade
+                    if (!EggEncounter || pkm.Egg_Location != Locations.LinkTrade6) // Link Trade
                         return false;
                 }
             }
@@ -411,13 +411,11 @@ namespace PKHeX.Core
             if (!pkm.HasOriginalMetLocation)
                 return lvl >= Level;
 
-            if (lvl == Level)
-                return true;
-            if (!(pkm.Format == 3 && EggEncounter && lvl == 0))
-                return false;
-
-            return true;
+            return lvl == Level || IsGen3EggEncounter(pkm, lvl);
         }
+
+        // met level 0, origin level 5
+        private bool IsGen3EggEncounter(PKM pkm, int lvl) => pkm.Format == 3 && EggEncounter && lvl == 0;
 
         public virtual bool IsMatchDeferred(PKM pkm)
         {

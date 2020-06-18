@@ -18,6 +18,8 @@ namespace PKHeX.Core
         public bool EggEncounter => Encounter.EggEncounter;
         public int LevelMin => Encounter.LevelMin;
         public int LevelMax => Encounter.LevelMax;
+        public int Generation => Encounter.Generation;
+        public GameVersion Version => Encounter.Version;
 
         public EncounterRejected(IEncounterable encounter, CheckResult check)
         {
@@ -25,7 +27,7 @@ namespace PKHeX.Core
             Check = check;
         }
 
-        public PKM ConvertToPKM(ITrainerInfo SAV) => ConvertToPKM(SAV, EncounterCriteria.Unrestricted);
-        public PKM ConvertToPKM(ITrainerInfo SAV, EncounterCriteria criteria) => throw new ArgumentException($"Cannot convert an {nameof(EncounterRejected)} to PKM.");
+        public PKM ConvertToPKM(ITrainerInfo sav) => ConvertToPKM(sav, EncounterCriteria.Unrestricted);
+        public PKM ConvertToPKM(ITrainerInfo sav, EncounterCriteria criteria) => throw new ArgumentException($"Cannot convert an {nameof(EncounterRejected)} to PKM.");
     }
 }

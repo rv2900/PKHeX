@@ -21,7 +21,7 @@ namespace PKHeX.Core
         {
             var level = Legal.GetValidMovesAllGens(pkm, restrict.EvolutionChains, minLvLG1: restrict.MinimumLevelGen1, minLvLG2: restrict.MinimumLevelGen2, Tutor: false, Machine: false, RemoveTransferHM: false);
 
-            if (encounter is IGeneration g && level[g.Generation] is List<int> x)
+            if (level[encounter.Generation] is List<int> x)
                 AddEdgeCaseMoves(x, encounter, pkm);
 
             LevelUpMoves = level;
@@ -33,8 +33,8 @@ namespace PKHeX.Core
         {
             switch (encounter)
             {
-                case EncounterStatic8N r when !EncounterStatic8N.IsHighestLevelTier(pkm.Met_Level) && pkm.Met_Level % 5 == 0: // Downleveled Raid can happen for shared raids and self-hosted raids.
-                    moves.AddRange(MoveLevelUp.GetMovesLevelUp(pkm, r.Species, -1, -1, 60, r.Form, GameVersion.SW, false, 8));
+                case EncounterStatic8N r when r.IsDownLeveled(pkm): // Downleveled Raid can happen for shared raids and self-hosted raids.
+                    moves.AddRange(MoveLevelUp.GetMovesLevelUp(pkm, r.Species, -1, -1, r.LevelMax, r.Form, GameVersion.SW, false, 8));
                     break;
             }
         }

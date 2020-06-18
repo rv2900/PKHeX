@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using static PKHeX.Core.GameVersion;
+using static PKHeX.Core.Legal;
 
 namespace PKHeX.Core
 {
@@ -13,32 +14,21 @@ namespace PKHeX.Core
     /// </remarks>
     public sealed class EvolutionTree
     {
-        private static readonly EvolutionTree Evolves1;
-        private static readonly EvolutionTree Evolves2;
-        private static readonly EvolutionTree Evolves3;
-        private static readonly EvolutionTree Evolves4;
-        private static readonly EvolutionTree Evolves5;
-        private static readonly EvolutionTree Evolves6;
-        private static readonly EvolutionTree Evolves7;
-        private static readonly EvolutionTree Evolves7b;
-        private static readonly EvolutionTree Evolves8;
+        private static readonly EvolutionTree Evolves1 = new EvolutionTree(new[] { Get("rby") }, Gen1, PersonalTable.Y, MaxSpeciesID_1);
+        private static readonly EvolutionTree Evolves2 = new EvolutionTree(new[] { Get("gsc") }, Gen2, PersonalTable.C, MaxSpeciesID_2);
+        private static readonly EvolutionTree Evolves3 = new EvolutionTree(new[] { Get("g3") }, Gen3, PersonalTable.RS, MaxSpeciesID_3);
+        private static readonly EvolutionTree Evolves4 = new EvolutionTree(new[] { Get("g4") }, Gen4, PersonalTable.DP, MaxSpeciesID_4);
+        private static readonly EvolutionTree Evolves5 = new EvolutionTree(new[] { Get("g5") }, Gen5, PersonalTable.BW, MaxSpeciesID_5);
+        private static readonly EvolutionTree Evolves6 = new EvolutionTree(Unpack("ao"), Gen6, PersonalTable.AO, MaxSpeciesID_6);
+        private static readonly EvolutionTree Evolves7 = new EvolutionTree(Unpack("uu"), Gen7, PersonalTable.USUM, MaxSpeciesID_7_USUM);
+        private static readonly EvolutionTree Evolves7b = new EvolutionTree(Unpack("gg"), Gen7, PersonalTable.GG, MaxSpeciesID_7b);
+        private static readonly EvolutionTree Evolves8 = new EvolutionTree(Unpack("ss"), Gen8, PersonalTable.SWSH, MaxSpeciesID_8);
+
+        private static byte[] Get(string resource) => Util.GetBinaryResource($"evos_{resource}.pkl");
+        private static byte[][] Unpack(string resource) => BinLinker.Unpack(Get(resource), resource);
 
         static EvolutionTree()
         {
-            // Evolution tables need Personal Tables initialized beforehand, hence why the EvolutionTree data is initialized here.
-            static byte[] get(string resource) => Util.GetBinaryResource($"evos_{resource}.pkl");
-            static byte[][] unpack(string resource) => BinLinker.Unpack(get(resource), resource);
-
-            Evolves1 = new EvolutionTree(new[] { get("rby") }, Gen1, PersonalTable.Y, Legal.MaxSpeciesID_1);
-            Evolves2 = new EvolutionTree(new[] { get("gsc") }, Gen2, PersonalTable.C, Legal.MaxSpeciesID_2);
-            Evolves3 = new EvolutionTree(new[] { get("g3") }, Gen3, PersonalTable.RS, Legal.MaxSpeciesID_3);
-            Evolves4 = new EvolutionTree(new[] { get("g4") }, Gen4, PersonalTable.DP, Legal.MaxSpeciesID_4);
-            Evolves5 = new EvolutionTree(new[] { get("g5") }, Gen5, PersonalTable.BW, Legal.MaxSpeciesID_5);
-            Evolves6 = new EvolutionTree(unpack("ao"), Gen6, PersonalTable.AO, Legal.MaxSpeciesID_6);
-            Evolves7 = new EvolutionTree(unpack("uu"), Gen7, PersonalTable.USUM, Legal.MaxSpeciesID_7_USUM);
-            Evolves7b = new EvolutionTree(unpack("gg"), Gen7, PersonalTable.GG, Legal.MaxSpeciesID_7b);
-            Evolves8 = new EvolutionTree(unpack("ss"), Gen8, PersonalTable.SWSH, Legal.MaxSpeciesID_8);
-
             // Throw in banned evolution data!
             Evolves7.FixEvoTreeSM();
             Evolves8.FixEvoTreeSS();
@@ -167,7 +157,7 @@ namespace PKHeX.Core
         private void FixEvoTreeSM()
         {
             // Sun/Moon lack Ultra's Kantonian evolution methods.
-            BanEvo((int)Species.Raichu, 1, pkm => pkm.IsUntraded && pkm.SM);
+            BanEvo((int)Species.Raichu, 0, pkm => pkm.IsUntraded && pkm.SM);
             BanEvo((int)Species.Marowak, 0, pkm => pkm.IsUntraded && pkm.SM);
             BanEvo((int)Species.Raichu, 0, pkm => pkm.IsUntraded && pkm.SM);
         }
@@ -175,11 +165,13 @@ namespace PKHeX.Core
         private void FixEvoTreeSS()
         {
             // Gigantamax Pikachu, Meowth-0, and Eevee are prevented from evolving.
+            // Raichu cannot be evolved to the Alolan variant at this time.
             BanEvo((int)Species.Raichu, 0, pkm => pkm is IGigantamax g && g.CanGigantamax);
-            BanEvo((int)Species.Raichu, 1, pkm => pkm is IGigantamax g && g.CanGigantamax || pkm.Gen8 || pkm.GG);
+            BanEvo((int)Species.Raichu, 1, pkm => (pkm is IGigantamax g && g.CanGigantamax) || pkm.Gen8 || pkm.GG);
             BanEvo((int)Species.Persian, 0, pkm => pkm is IGigantamax g && g.CanGigantamax);
 
             BanEvo((int)Species.Weezing, 0, pkm => pkm.Gen8);
+            BanEvo((int)Species.MrMime, 0, pkm => pkm.Gen8);
 
             foreach (var s in GetEvolutions((int)Species.Eevee, 0)) // Eeveelutions
                 BanEvo(s, 0, pkm => pkm is IGigantamax g && g.CanGigantamax);

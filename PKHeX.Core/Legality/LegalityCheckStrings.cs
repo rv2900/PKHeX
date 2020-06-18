@@ -31,13 +31,13 @@ namespace PKHeX.Core
         /// <summary>Format text for exporting a legality check result for a Relearn Move.</summary>
         public static string L_F0_RM_1_2 { get; set; } = "{0} Relearn Move {1}: {2}";
 
-        /// <summary>Format text for exporting the type of Encounter that was matched for the the <see cref="PKM"/></summary>
+        /// <summary>Format text for exporting the type of Encounter that was matched for the <see cref="PKM"/></summary>
         public static string L_FEncounterType_0 { get; set; } = "Encounter Type: {0}";
 
-        /// <summary>Format text for exporting the <see cref="PIDIV.OriginSeed"/> that was matched for the the <see cref="PKM"/></summary>
+        /// <summary>Format text for exporting the <see cref="PIDIV.OriginSeed"/> that was matched for the <see cref="PKM"/></summary>
         public static string L_FOriginSeed_0 { get; set; } = "Origin Seed: {0}";
 
-        /// <summary>Format text for exporting the <see cref="PIDIV.Type"/> that was matched for the the <see cref="PKM"/></summary>
+        /// <summary>Format text for exporting the <see cref="PIDIV.Type"/> that was matched for the <see cref="PKM"/></summary>
         public static string L_FPIDType_0 { get; set; } = "PID Type: {0}";
 
         /// <summary>Severity string for <see cref="Severity.Indeterminate"/></summary>
@@ -309,6 +309,9 @@ namespace PKHeX.Core
         public static string LMemoryStatFriendshipHT0 { get; set; } = "Untraded: Handling Trainer Friendship should be 0.";
         public static string LMemoryStatFriendshipOTBaseEvent { get; set; } = "Event OT Friendship does not match base friendship.";
 
+        public static string LMemoryStatFullness { get; set; } = "Fullness should be {0}.";
+        public static string LMemoryStatEnjoyment { get; set; } = "Enjoyment should be {0}.";
+
         public static string LMoveEggFIncompatible0_1 { get; set; } = "{0} Inherited Move. Incompatible with {1} inherited moves.";
         public static string LMoveEggIncompatible { get; set; } = "Egg Move. Incompatible with event Egg moves.";
         public static string LMoveEggIncompatibleEvent { get; set; } = "Event Egg Move. Incompatible with normal Egg moves.";
@@ -402,6 +405,7 @@ namespace PKHeX.Core
         public static string LRibbonEgg { get; set; } = "Can't receive Ribbon(s) as an Egg.";
         public static string LRibbonFInvalid_0 { get; set; } = "Invalid Ribbons: {0}";
         public static string LRibbonFMissing_0 { get; set; } = "Missing Ribbons: {0}";
+        public static string LRibbonMarkingFInvalid_0 { get; set; } = "Invalid Marking: {0}";
 
         public static string LStatDynamaxInvalid { get; set; } = "Dynamax Level is not within the expected range.";
         public static string LStatIncorrectHeight { get; set; } = "Calculated Height does not match stored value.";

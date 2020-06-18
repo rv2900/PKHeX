@@ -138,9 +138,9 @@ namespace PKHeX.WinForms
 
         private static void FormLoadCustomBackupPaths()
         {
-            SaveDetection.CustomBackupPaths.Clear();
+            SaveFinder.CustomBackupPaths.Clear();
             if (File.Exists(SAVPaths)) // custom user paths
-                SaveDetection.CustomBackupPaths.AddRange(File.ReadAllLines(SAVPaths).Where(Directory.Exists));
+                SaveFinder.CustomBackupPaths.AddRange(File.ReadAllLines(SAVPaths).Where(Directory.Exists));
         }
 
         private void FormLoadAddEvents()
@@ -188,13 +188,13 @@ namespace PKHeX.WinForms
                 #endif
                 {
                     string path = null;
-                    if (Settings.Default.DetectSaveOnStartup && !DetectSaveFile(out path) && path != null)
+                    SaveFile sav = null;
+                    if (Settings.Default.DetectSaveOnStartup && !DetectSaveFile(out path, out sav) && path != null)
                         WinFormsUtil.Error(path); // `path` contains the error message
 
                     bool savLoaded = false;
-                    if (path != null && File.Exists(path))
+                    if (sav != null)
                     {
-                        var sav = SaveUtil.GetVariantSAV(path);
                         savLoaded = OpenSAV(sav, path);
                     }
                     if (!savLoaded)
@@ -292,10 +292,7 @@ namespace PKHeX.WinForms
             #endif
 
             // Select Language
-            int lang = GameLanguage.GetLanguageIndex(settings.Language);
-            if (lang < 0)
-                lang = GameLanguage.DefaultLanguageIndex;
-            CB_MainLanguage.SelectedIndex = lang;
+            CB_MainLanguage.SelectedIndex = GameLanguage.GetLanguageIndex(settings.Language);
         }
 
         private void FormLoadPlugins()
@@ -436,6 +433,7 @@ namespace PKHeX.WinForms
             ParseSettings.AllowGen1Tradeback = settings.AllowGen1Tradeback;
             ParseSettings.Gen8TransferTrackerNotPresent = settings.FlagMissingTracker ? Severity.Invalid : Severity.Fishy;
             PKME_Tabs.HideSecretValues = C_SAV.HideSecretDetails = settings.HideSecretDetails;
+            SpriteUtil.UseLargeAlways = settings.UseLargeSprites;
         }
 
         private void MainMenuBoxLoad(object sender, EventArgs e)
@@ -494,12 +492,12 @@ namespace PKHeX.WinForms
             { WinFormsUtil.Alert(MsgClipboardFailRead); return; }
 
             // Get Simulator Data
-            ShowdownSet Set = new ShowdownSet(Clipboard.GetText());
+            var Set = new ShowdownSet(Clipboard.GetText());
 
             if (Set.Species < 0)
             { WinFormsUtil.Alert(MsgSimulatorFailClipboard); return; }
 
-            if (Set.Nickname?.Length > C_SAV.SAV.NickLength)
+            if (Set.Nickname.Length > C_SAV.SAV.NickLength)
                 Set.Nickname = Set.Nickname.Substring(0, C_SAV.SAV.NickLength);
 
             if (DialogResult.Yes != WinFormsUtil.Prompt(MessageBoxButtons.YesNo, MsgSimulatorLoad, Set.Text))
@@ -719,24 +717,20 @@ namespace PKHeX.WinForms
         {
             if (sav == null || sav.Version == GameVersion.Invalid)
             {
-                // temporary swsh fix for initial release broken saves
-                // remove any time after November
-                if (sav is SAV8SWSH z)
-                {
-                    var shift = z.Game + (GameVersion.SW - GameVersion.SN);
-                    if (shift == (int) GameVersion.SW || shift == (int) GameVersion.SH)
-                        z.Game = shift;
-                }
-                else
-                {
-                    WinFormsUtil.Error(MsgFileLoadSaveLoadFail, path);
-                    return true;
-                }
+                WinFormsUtil.Error(MsgFileLoadSaveLoadFail, path);
+                return true;
             }
 
             sav.SetFileInfo(path);
             if (!SanityCheckSAV(ref sav))
                 return true;
+
+            if (C_SAV.SAV?.Edited == true && Settings.Default.ModifyUnset)
+            {
+                var prompt = WinFormsUtil.Prompt(MessageBoxButtons.YesNo, MsgProgramCloseUnsaved, MsgProgramSaveFileConfirm);
+                if (prompt != DialogResult.Yes)
+                    return true;
+            }
 
             PKME_Tabs.Focus(); // flush any pending changes
             StoreLegalSaveGameData(sav);
@@ -849,7 +843,7 @@ namespace PKHeX.WinForms
 
         private static bool IsFileLocked(string path)
         {
-            try { return File.GetAttributes(path).HasFlag(FileAttributes.ReadOnly); }
+            try { return (File.GetAttributes(path) & FileAttributes.ReadOnly) != 0; }
             catch { return true; }
         }
 
@@ -1203,16 +1197,16 @@ namespace PKHeX.WinForms
 
         private void ClickSaveFileName(object sender, EventArgs e)
         {
-            if (!DetectSaveFile(out string path))
+            if (!DetectSaveFile(out string path, out var sav))
                 return;
             if (WinFormsUtil.Prompt(MessageBoxButtons.YesNo, MsgFileLoadSaveDetectReload, path) == DialogResult.Yes)
-                OpenQuick(path); // load save
+                LoadFile(sav, path); // load save
         }
 
-        private static bool DetectSaveFile(out string path)
+        private static bool DetectSaveFile(out string path, out SaveFile sav)
         {
             string msg = null;
-            var sav = SaveDetection.DetectSaveFile(Environment.GetLogicalDrives(), ref msg);
+            sav = SaveFinder.FindMostRecentSaveFile(Environment.GetLogicalDrives(), ref msg);
             if (sav == null && !string.IsNullOrWhiteSpace(msg))
                 WinFormsUtil.Error(msg);
 

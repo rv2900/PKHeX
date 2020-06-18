@@ -6,6 +6,8 @@ namespace PKHeX.Core
     {
         public static bool IsAllShadowLockValid(EncounterStaticShadow s, PIDIV pv, PKM pkm)
         {
+            if (s.Version == GameVersion.XD && pkm.IsShiny)
+                return false; // no xd shiny shadow mons
             var teams = s.Locks;
             if (teams.Length == 0)
                 return true;
