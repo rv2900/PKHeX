@@ -382,9 +382,33 @@ namespace PKHeX.Core
                     yield return new RibbonResult(nameof(s8.RibbonChampionGalar));
 
                 // Legends cannot compete in Ranked, thus cannot reach Master Rank and obtain the ribbon.
-                if (s8.RibbonMasterRank && Legal.Legends.Contains(pkm.Species))
+                // Past gen Pokemon can get the ribbon only if they've been reset.
+                if (s8.RibbonMasterRank && !CanParticipateInRankedSWSH(pkm))
                     yield return new RibbonResult(nameof(s8.RibbonMasterRank));
             }
+        }
+
+        private static bool CanParticipateInRankedSWSH(PKM pkm)
+        {
+            if (!pkm.SWSH && pkm is IBattleVersion v && v.BattleVersion == 0)
+                return false;
+
+            // Clamp to permitted species
+            var spec = pkm.Species;
+           
+            if (638 <= spec && spec <= 640)
+                return true; // Sub Legends
+            if (722 <= spec && spec <= 730)
+                return true; // Gen7 starters
+            var pi = (PersonalInfoSWSH)PersonalTable.SWSH[spec];
+            var galarDex = pi.PokeDexIndex;
+            var armorDex = pi.ArmorDexIndex;
+            if (1 <= galarDex && galarDex <= 397)
+                return true;
+            if (1 <= armorDex && armorDex <= 210)
+                return true;
+
+            return false;
         }
 
         private static IEnumerable<RibbonResult> GetInvalidRibbonsEvent1(PKM pkm, object encounterContent)
