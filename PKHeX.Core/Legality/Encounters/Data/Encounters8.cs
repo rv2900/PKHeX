@@ -438,7 +438,7 @@ namespace PKHeX.Core
             new EncounterStatic8 { Species = 528, Level = 27, Location = 170 }, // Swoobat on Challenge Beach (on the Isle of Armor)
             new EncounterStatic8 { Species = 279, Level = 26, Location = 170 }, // Pelipper on Challenge Beach (on the Isle of Armor)
             new EncounterStatic8 { Species = 082, Level = 26, Location = 170 }, // Magneton on Challenge Beach (on the Isle of Armor)
-            new EncounterStatic8S{ Species = 782, Level = 22, Locations = new[] {174, 180}, Version = SW }, // Jangmo-o on Challenge Road, in the Training Lowlands (on the Isle of Armor)
+            new EncounterStatic8S{ Species = 782, Level = 22, Locations = new[] {172, 174, 180}, Version = SW }, // Jangmo-o on Challenge Road, in the Training Lowlands (on the Isle of Armor) and in Brawlers' Cave
             new EncounterStatic8 { Species = 426, Level = 26, Location = 170 }, // Drifblim on Challenge Beach (on the Isle of Armor)
             new EncounterStatic8 { Species = 768, Level = 36, Location = 170 }, // Golisopod on Challenge Beach (on the Isle of Armor)
             new EncounterStatic8 { Species = 662, Level = 26, Location = 170 }, // Fletchinder on Challenge Beach (on the Isle of Armor)
@@ -461,18 +461,18 @@ namespace PKHeX.Core
             new EncounterStatic8 { Species = 526, Level = 42, Location = 172 }, // Gigalith in Brawlers’ Cave (on the Isle of Armor)
             new EncounterStatic8 { Species = 620, Level = 28, Location = 174 }, // Mienshao on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 625, Level = 36, Location = 174 }, // Bisharp on Challenge Road (on the Isle of Armor)
-            new EncounterStatic8S{ Species = 454, Level = 26, Locations = new[] {174, 180}, Version = SH }, // Toxicroak on Challenge Road (on the Isle of Armor)
-            new EncounterStatic8S{ Species = 560, Level = 26, Locations = new[] {174, 180}, Version = SW }, // Scrafty on Challenge Road, in the Training Lowlands (on the Isle of Armor)
+            new EncounterStatic8S{ Species = 454, Level = 26, Locations = new[] {172, 174, 180}, Version = SH }, // Toxicroak on Challenge Road (on the Isle of Armor) and in Brawlers’ Cave
+            new EncounterStatic8S{ Species = 560, Level = 26, Locations = new[] {172, 174, 180}, Version = SW }, // Scrafty on Challenge Road, in the Training Lowlands (on the Isle of Armor) and in Brawlers’ Cave
             new EncounterStatic8 { Species = 758, Level = 28, Location = 174, Gender = 1 }, // Salazzle on Challenge Road (on the Isle of Armor)
-            new EncounterStatic8S{ Species = 558, Level = 26, Locations = new[] {174, 180} }, // Crustle on Challenge Road, in the Training Lowlands (on the Isle of Armor)
+            new EncounterStatic8S{ Species = 558, Level = 26, Locations = new[] {172, 174, 180} }, // Crustle on Challenge Road, in the Training Lowlands (on the Isle of Armor) and in Brawlers’ Cave
             new EncounterStatic8 { Species = 475, Level = 32, Location = 174 }, // Gallade on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 745, Level = 32, Location = 174 }, // Lycanroc on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 745, Level = 32, Location = 174, Form = 01 }, // Lycanroc-1 on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 212, Level = 40, Location = 174 }, // Scizor on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 214, Level = 26, Location = 174, Version = SH }, // Heracross on Challenge Road (on the Isle of Armor)
-            new EncounterStatic8 { Species = 744, Level = 22, Location = 174 }, // Rockruff on Challenge Road (on the Isle of Armor)
+            new EncounterStatic8S{ Species = 744, Level = 22, Locations = new[] {172,  174} }, // Rockruff on Challenge Road (on the Isle of Armor) and in Brawlers' Cave
             new EncounterStatic8 { Species = 127, Level = 26, Location = 174, Version = SW }, // Pinsir on Challenge Road (on the Isle of Armor)
-            new EncounterStatic8 { Species = 227, Level = 26, Location = 174 }, // Skarmory on Challenge Road (on the Isle of Armor)
+            new EncounterStatic8S{ Species = 227, Level = 26, Locations = new[] {174, 180} }, // Skarmory on Challenge Road (on the Isle of Armor), in the Training Lowlands (on the Isle of Armor)
             new EncounterStatic8 { Species = 426, Level = 26, Location = 174 }, // Drifblim on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 630, Level = 26, Location = 174, Version = SH }, // Mandibuzz on Challenge Road (on the Isle of Armor)
             new EncounterStatic8 { Species = 628, Level = 26, Location = 174, Version = SW }, // Braviary on Challenge Road (on the Isle of Armor)
@@ -538,7 +538,7 @@ namespace PKHeX.Core
             new EncounterStatic8 { Species = 112, Level = 42, Location = 184 }, // Rhydon in the Potbottom Desert (on the Isle of Armor)
             new EncounterStatic8 { Species = 324, Level = 42, Location = 184 }, // Torkoal in the Potbottom Desert (on the Isle of Armor)
             new EncounterStatic8 { Species = 844, Level = 42, Location = 184 }, // Sandaconda in the Potbottom Desert (on the Isle of Armor)
-            new EncounterStatic8 { Species = 637, Level = 50, Location = -01 }, // Volcarona
+            new EncounterStatic8 { Species = 637, Level = 50, Location = 184 }, // Volcarona in the Potbottom Desert (on the Isle of Armor)
             new EncounterStatic8 { Species = 628, Level = 42, Location = 184, Version = SW }, // Braviary in the Potbottom Desert (on the Isle of Armor)
             new EncounterStatic8 { Species = 630, Level = 42, Location = 184, Version = SH }, // Mandibuzz in the Potbottom Desert (on the Isle of Armor)
             new EncounterStatic8 { Species = 103, Level = 50, Location = 190 }, // Exeggutor in the Insular Sea (on the Isle of Armor)
@@ -552,7 +552,7 @@ namespace PKHeX.Core
             new EncounterStatic8 { Species = 415, Level = 40, Location = 194 }, // Combee on Honeycalm Island (on the Isle of Armor)
             new EncounterStatic8 { Species = 028, Level = 42, Location = 184 }, // Sandslash in the Potbottom Desert (on the Isle of Armor)
             new EncounterStatic8 { Species = 587, Level = 20, Location = 168 }, // Emolga in the Forest of Focus (on the Isle of Armor)
-            new EncounterStatic8 { Species = 847, Level = 42, Location = 170 }, // Barraskewda on Challenge Beach (on the Isle of Armor)
+            new EncounterStatic8S{ Species = 847, Level = 42, Locations = new[] {170, 180} }, // Barraskewda on Challenge Beach (on the Isle of Armor) and Training Lowlands
             new EncounterStatic8 { Species = 224, Level = 45, Location = 170 }, // Octillery on Challenge Beach (on the Isle of Armor)
             new EncounterStatic8 { Species = 171, Level = 42, Location = 170 }, // Lanturn on Challenge Beach (on the Isle of Armor)
             new EncounterStatic8 { Species = 593, Level = 42, Location = 170 }, // Jellicent on Challenge Beach (on the Isle of Armor)
@@ -606,8 +606,8 @@ namespace PKHeX.Core
             new EncounterTrade8(554,15,01,040,12,2) { Ability = 4, TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {326,000,000,000} }, // Darumaka
             new EncounterTrade8(263,15,01,045,04,2) { Ability = 4, TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {245,000,000,000} }, // Zigzagoon
             new EncounterTrade8(618,15,01,050,05,2) { Ability = 4, TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {281,000,000,000} }, // Stunfisk
-            new EncounterTrade8(110,15,01,040,12,2) { Ability = 4, TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {220,000,000,000} }, // Weezing (todo: verify HA is the only used ingame trade; if not, change Ability = -1)
-            new EncounterTrade8(103,15,01,038,06,2) {              TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {246,000,000,000}, Form = 1}, // Exeggutor-1
+            new EncounterTrade8(110,15,01,040,12,2) { Ability =-1, TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {220,000,000,000} }, // Weezing
+            new EncounterTrade8(103,15,01,038,06,2) {              TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {246,000,000,000}, Form = 1 }, // Exeggutor-1
             new EncounterTrade8(105,15,01,038,06,2) {              TID7 = 101141, FlawlessIVCount = 3, DynamaxLevel = 5, OTGender = 1, Shiny = Shiny.Random, IsNicknamed = false, Relearn = new[] {174,000,000,000}, Form = 1 }, // Marowak-1
         };
 

@@ -99,11 +99,11 @@ namespace PKHeX.Core
         private const byte Nest090 = 90;
         private const byte Nest091 = 91;
         private const byte Nest092 = 92;
-        private const byte Nest093 = 93;
-        private const byte Nest094 = 94;
-        private const byte Nest095 = 95;
-        private const byte Nest096 = 96;
-        private const byte Nest097 = 97;
+      //private const byte Nest093 = 93;
+      //private const byte Nest094 = 94;
+      //private const byte Nest095 = 95;
+      //private const byte Nest096 = 96;
+      //private const byte Nest097 = 97;
         private const byte Nest098 = 98;
         private const byte Nest099 = 99;
         private const byte Nest100 = 100;
@@ -326,9 +326,9 @@ namespace PKHeX.Core
         };
 
         // Abilities Allowed
-        private const int A2 = 4; // Ability 4 only??
+        private const int A2 = 4; // Ability 4 only
         private const int A3 = 0; // 1/2 only
-        internal const int A4 = -1; // 1/2/H
+        private const int A4 = -1; // 1/2/H
 
         internal const int SharedNest = 162;
         internal const int Watchtower = 126;
