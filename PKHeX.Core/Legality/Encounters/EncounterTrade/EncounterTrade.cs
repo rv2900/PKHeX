@@ -26,6 +26,7 @@ namespace PKHeX.Core
         public int SID { get; set; }
         public GameVersion Version { get; set; } = GameVersion.Any;
         public IReadOnlyList<int> IVs { get; set; } = Array.Empty<int>();
+        public int FlawlessIVCount { get; set; }
         public int Form { get; set; }
         public virtual Shiny Shiny { get; set; } = Shiny.Never;
         public int Gender { get; set; } = -1;
@@ -152,9 +153,10 @@ namespace PKHeX.Core
 
         protected virtual void SetPINGA(PKM pk, EncounterCriteria criteria)
         {
-            int gender = criteria.GetGender(Gender, pk.PersonalInfo);
+            var pi = pk.PersonalInfo;
+            int gender = criteria.GetGender(Gender, pi);
             int nature = (int)criteria.GetNature(Nature);
-            int ability = Ability >> 1;
+            int ability = criteria.GetAbilityFromNumber(Ability, pi);
 
             PIDGenerator.SetRandomWildPID(pk, Generation, nature, ability, gender);
             pk.Nature = nature;

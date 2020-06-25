@@ -30,7 +30,7 @@ namespace PKHeX.Core
         protected override IEnumerable<EncounterSlot> GetMatchFromEvoLevel(PKM pkm, IEnumerable<EvoCriteria> vs, int minLevel)
         {
             var loc = Location;
-            if (IsWildArea8(loc)) // wild area gets boosted up to level 60 post-game
+            if (IsWildArea8(loc) || IsWildArea8Armor(loc)) // wild area gets boosted up to level 60 post-game
             {
                 const int boostTo = 60;
                 if (pkm.Met_Level == boostTo)
@@ -59,8 +59,9 @@ namespace PKHeX.Core
         protected override IEnumerable<EncounterSlot> GetFilteredSlots(PKM pkm, IEnumerable<EncounterSlot> slots, int minLevel) => slots;
 
         public static bool IsWildArea8(int loc) => 122 <= loc && loc <= 154; // Rolling Fields -> Lake of Outrage
+        public static bool IsWildArea8Armor(int loc) => 164 <= loc && loc <= 194; // Fields of Honor -> Honeycalm Island
 
-        // Location, and areas that can feed encounters into it.
+        // Location, and areas that it can feed encounters to.
         public static readonly IReadOnlyDictionary<int, IReadOnlyList<byte>> ConnectingArea8 = new Dictionary<int, IReadOnlyList<byte>>
         {
             // Rolling Fields
@@ -131,6 +132,30 @@ namespace PKHeX.Core
             {152, new byte[] {144, 150}},
 
             // Lake of Outrage is just itself.
+
+            // Challenge Beach
+            // Soothing Wetlands, Courageous Cavern
+            {170, new byte[] {166, 176}},
+
+            // Challenge Road
+            // Brawler's Cave
+            {174, new byte[] {172}},
+
+            // Warm-Up Tunnel
+            // Training Lowlands, Potbottom Desert
+            {182, new byte[] {180, 184}},
+
+            // Workout Sea
+            // Fields of Honor
+            {186, new byte[] {164}},
+
+            // Stepping-Stone Sea
+            // Fields of Honor
+            {188, new byte[] {170}},
+
+            // Honeycalm Sea
+            // Honeycalm Island
+            {192, new byte[] {194}},
         };
     }
 

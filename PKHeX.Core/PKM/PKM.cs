@@ -756,7 +756,7 @@ namespace PKHeX.Core
         {
             AbilityNumber = 1 << n;
             int[] abilities = PersonalInfo.Abilities;
-            if (n < abilities.Length)
+            if ((uint)n < abilities.Length)
             {
                 if (abilities[n] == abilities[0])
                     n = 0;
@@ -912,9 +912,9 @@ namespace PKHeX.Core
         /// Gets the PP of a Move ID with consideration of the amount of PP Ups applied.
         /// </summary>
         /// <param name="move">Move ID</param>
-        /// <param name="ppup">PP Ups count</param>
+        /// <param name="ppUpCount">PP Ups count</param>
         /// <returns>Current PP for the move.</returns>
-        public virtual int GetMovePP(int move, int ppup) => GetBasePP(move) * (5 + ppup) / 5;
+        public virtual int GetMovePP(int move, int ppUpCount) => GetBasePP(move) * (5 + ppUpCount) / 5;
 
         /// <summary>
         /// Gets the base PP of a move ID depending on the <see cref="PKM"/>'s format.

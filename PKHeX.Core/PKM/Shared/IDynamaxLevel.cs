@@ -1,4 +1,6 @@
-﻿namespace PKHeX.Core
+﻿using static PKHeX.Core.Species;
+
+namespace PKHeX.Core
 {
     public interface IDynamaxLevel
     {
@@ -11,7 +13,8 @@
         {
             if (pkm.IsEgg)
                 return false;
-            if (pkm.Species >= (int)Species.Zacian)
+            var species = pkm.Species;
+            if (species == (int)Zacian || species == (int)Zamazenta || species == (int)Eternatus)
                 return false;
             return true;
         }

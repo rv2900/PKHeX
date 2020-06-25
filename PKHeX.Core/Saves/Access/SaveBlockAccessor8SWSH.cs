@@ -22,6 +22,7 @@ namespace PKHeX.Core
         public TrainerCard8 TrainerCard{ get; }
         public FashionUnlock8 Fashion { get; }
         public RaidSpawnList8 Raid { get; }
+        public RaidSpawnList8 RaidArmor { get; }
         public TitleScreen8 TitleScreen { get; }
         public TeamIndexes8 TeamIndexes { get; }
         public HallOfFameTime8 FameTime { get; }
@@ -32,7 +33,7 @@ namespace PKHeX.Core
             BoxInfo = new Box8(sav, GetBlock(KBox));
             PartyInfo = new Party8(sav, GetBlock(KParty));
             Items = new MyItem8(sav, GetBlock(KItem));
-            Zukan = new Zukan8(sav, GetBlock(KZukan));
+            Zukan = new Zukan8(sav, GetBlock(KZukan), GetBlockSafe(KZukanR1), GetBlockSafe(KZukanR2));
             MyStatus = new MyStatus8(sav, GetBlock(KMyStatus));
             Misc = new Misc8(sav, GetBlock(KMisc));
             BoxLayout = new BoxLayout8(sav, GetBlock(KBoxLayout));
@@ -42,7 +43,8 @@ namespace PKHeX.Core
             Daycare = new Daycare8(sav, GetBlock(KDaycare));
             Records = new Record8(sav, GetBlock(KRecord), Core.Records.MaxType_SWSH);
             Fashion = new FashionUnlock8(sav, GetBlock(KFashionUnlock));
-            Raid = new RaidSpawnList8(sav, GetBlock(KRaidSpawnList));
+            Raid = new RaidSpawnList8(sav, GetBlock(KRaidSpawnList), RaidSpawnList8.RaidCountLegal_O0);
+            RaidArmor = new RaidSpawnList8(sav, GetBlockSafe(KRaidSpawnListR1), RaidSpawnList8.RaidCountLegal_R1);
             TitleScreen = new TitleScreen8(sav, GetBlock(KTitleScreenTeam));
             TeamIndexes = new TeamIndexes8(sav, GetBlock(KTeamIndexes));
             FameTime = new HallOfFameTime8(sav, GetBlock(KEnteredHallOfFame));
@@ -69,11 +71,14 @@ namespace PKHeX.Core
         private const uint KDaycare = 0x2d6fba6a; // Daycare slots (2 daycares)
         private const uint KTeamIndexes = 0x33F39467; // Team Indexes for competition
         private const uint KRecord = 0x37da95a3;
-        private const uint KZukan = 0x4716c404; // PokeDex
+        private const uint KZukan = 0x4716c404; // ZukanData_Pokemon
+        private const uint KZukanR1 = 0x3F936BA9; // ZukanData_PokemonR1 (Armor)
+        private const uint KZukanR2 = 0x3C9366F0; // ZukanData_PokemonR2 (Crown)
         private const uint KCurryDex = 0x6EB72940; // Curry Dex
         private const uint KTrainerCard = 0x874da6fa; // Trainer Card
         private const uint KPlayTime = 0x8cbbfd90; // Time Played
         private const uint KRaidSpawnList = 0x9033eb7b; // Nest current values (hash, seed, meta)
+        private const uint KRaidSpawnListR1 = 0x158DA896; // Raid Data for DLC1
         private const uint KFused = 0xc0de5c5f; // Fused PKM (*3)
         private const uint KFashionUnlock = 0xd224f9ac; // Fashion unlock bool array (owned for (each apparel type) * 0x80, then another array for "new")
         private const uint KTitleScreenTeam = 0xE9BE28BF; // Title Screen Team details
@@ -128,7 +133,8 @@ namespace PKHeX.Core
         public const uint KDiggingDuoStreakStamina = 0x066F38F5; // U32
         public const uint KBirthMonth = 0x0D987D50; // U32
         public const uint KBirthDay = 0x355C8314; // U32
-        public const uint KCurrentDexEntry = 0x62743428; // U16 Species ID of last Pokedex entry viewed
+        public const uint KCurrentDexEntry = 0x62743428; // U16 Species ID of last Pokedex entry viewed in Galar Dex
+        public const uint KCurrentDexEntryR1 = 0x789FF72D; // U16 Species ID of last Pokedex entry viewed in Armor Dex
 
         public const uint KVolumeBackgroundMusic = 0xF8154AC9; // U32 0-10
         public const uint KVolumeSoundEffects = 0x62F05895; // U32 0-10
@@ -146,6 +152,81 @@ namespace PKHeX.Core
         public const uint KOptionAutoSave = 0xB027F396; // U32 OptOut AutoSave=0
         public const uint KOptionShowNicknames = 0xCA8A8CEE; // U32 OptOut Show=0
         public const uint KOptionShowMoves = 0x9C781AE2; // U32 OptOut Show=0
+        public const uint KDojoWattDonationTotal = 0xC7161487; // U32 Amount of Watts donated to Master Dojo
+        public const uint KDiggingPaWattStreak = 0x68BBA8B1; // U32 Most Watts dug up by the Digging Pa
+        public const uint KAlolanDiglettFound = 0x4AEA5A7E; // U32 Amount of Alolan Diglett found on Isle of Armor
+        public const uint KSparringStreakNormal = 0xDB5E16CB; // U32 Best Normal-Type Restricted Sparring Streak
+        public const uint KSparringNormalPartySlot1 = 0x7BF09DD3; // U16 Species ID of 1st PKM in party
+        public const uint KSparringNormalPartySlot2 = 0x7AF09C40; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringNormalPartySlot3 = 0x7DF0A0F9; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakFire = 0xD25E08A0; // U32 Best Fire-Type Restricted Sparring Streak
+        public const uint KSparringFirePartySlot1 = 0x455C523A; // U16 Species ID of 1st PKM in party
+        public const uint KSparringFirePartySlot2 = 0x465C53CD; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringFirePartySlot3 = 0x435C4F14; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakWater = 0xD55BCEC2; // U32 Best Water-Type Restricted Sparring Streak
+        public const uint KSparringWaterPartySlot1 = 0x30396510; // U16 Species ID of 1st PKM in party
+        public const uint KSparringWaterPartySlot2 = 0x313966A3; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringWaterPartySlot3 = 0x32396836; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakElectric = 0xD35BCB9C; // U32 Best Electric-Type Restricted Sparring Streak
+        public const uint KSparringElectricPartySlot1 = 0x1E5FB12E; // U16 Species ID of 1st PKM in party
+        public const uint KSparringElectricPartySlot2 = 0x1F5FB2C1; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringElectricPartySlot3 = 0x1C5FAE08; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakGrass = 0xD65BD055; // U32 Best Grass-Type Restricted Sparring Streak
+        public const uint KSparringGrassPartySlot1 = 0x70973021; // U16 Species ID of 1st PKM in party
+        public const uint KSparringGrassPartySlot2 = 0x6F972E8E; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringGrassPartySlot3 = 0x6E972CFB; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakIce = 0xD15BC876; // U32 Best Ice-Type Restricted Sparring Streak
+        public const uint KSparringIcePartySlot1 = 0x892112D4; // U16 Species ID of 1st PKM in party
+        public const uint KSparringIcePartySlot2 = 0x8A211467; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringIcePartySlot3 = 0x8B2115FA; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakFighting = 0xDA5E1538; // U32 Best Fighting-Type Restricted Sparring Streak
+        public const uint KSparringFightingPartySlot1 = 0x153FD7E2; // U16 Species ID of 1st PKM in party
+        public const uint KSparringFightingPartySlot2 = 0x163FD975; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringFightingPartySlot3 = 0x133FD4BC; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakPoison = 0xDC5E185E; // U32 Best Poison-Type Restricted Sparring Streak
+        public const uint KSparringPoisonPartySlot1 = 0x3BFF8084; // U16 Species ID of 1st PKM in party
+        public const uint KSparringPoisonPartySlot2 = 0x3CFF8217; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringPoisonPartySlot3 = 0x3DFF83AA; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakGround = 0xDF5E1D17; // U32 Best Ground-Type Restricted Sparring Streak
+        public const uint KSparringGroundPartySlot1 = 0x29BC6D6F; // U16 Species ID of 1st PKM in party
+        public const uint KSparringGroundPartySlot2 = 0x28BC6BDC; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringGroundPartySlot3 = 0x2BBC7095; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakFlying = 0xDD5E19F1; // U32 Best Flying-Type Restricted Sparring Streak
+        public const uint KSparringFlyingPartySlot1 = 0xA17311F5; // U16 Species ID of 1st PKM in party
+        public const uint KSparringFlyingPartySlot2 = 0xA0731062; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringFlyingPartySlot3 = 0x9F730ECF; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakPsychic = 0xD45BCD2F; // U32 Best Psychic-Type Restricted Sparring Streak
+        public const uint KSparringPsychicPartySlot1 = 0x04C18EBF; // U16 Species ID of 1st PKM in party
+        public const uint KSparringPsychicPartySlot2 = 0x03C18D2C; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringPsychicPartySlot3 = 0x06C191E5; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakBug = 0xE15E203D; // U32 Best Bug-Type Restricted Sparring Streak
+        public const uint KSparringBugPartySlot1 = 0xE9C80191; // U16 Species ID of 1st PKM in party
+        public const uint KSparringBugPartySlot2 = 0xE8C7FFFE; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringBugPartySlot3 = 0xE7C7FE6B; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakRock = 0xDE5E1B84; // U32 Best Rock-Type Restricted Sparring Streak
+        public const uint KSparringRockPartySlot1 = 0xFE44971E; // U16 Species ID of 1st PKM in party
+        public const uint KSparringRockPartySlot2 = 0xFF4498B1; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringRockPartySlot3 = 0xFC4493F8; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakGhost = 0xE05E1EAA; // U32 Best Ghost-Type Restricted Sparring Streak
+        public const uint KSparringGhostPartySlot1 = 0x63170940; // U16 Species ID of 1st PKM in party
+        public const uint KSparringGhostPartySlot2 = 0x64170AD3; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringGhostPartySlot3 = 0x65170C66; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakDragon = 0xD25BCA09; // U32 Best Dragon-Type Restricted Sparring Streak
+        public const uint KSparringDragonPartySlot1 = 0xC18E2C05; // U16 Species ID of 1st PKM in party
+        public const uint KSparringDragonPartySlot2 = 0xC08E2A72; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringDragonPartySlot3 = 0xBF8E28DF; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakDark = 0xCF5BC550; // U32 Best Dark-Type Restricted Sparring Streak
+        public const uint KSparringDarkPartySlot1 = 0xD6F84432; // U16 Species ID of 1st PKM in party
+        public const uint KSparringDarkPartySlot2 = 0xD7F845C5; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringDarkPartySlot3 = 0xD4F8410C; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakSteel = 0xD35E0A33; // U32 Best Steel-Type Restricted Sparring Streak
+        public const uint KSparringSteelPartySlot1 = 0x72115D0B; // U16 Species ID of 1st PKM in party
+        public const uint KSparringSteelPartySlot2 = 0x71115B78; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringSteelPartySlot3 = 0x74116031; // U16 Species ID of 3rd PKM in party
+        public const uint KSparringStreakFairy = 0xD05BC6E3; // U32 Best Fairy-Type Restricted Sparring Streak
+        public const uint KSparringFairyPartySlot1 = 0x02BFCC63; // U16 Species ID of 1st PKM in party
+        public const uint KSparringFairyPartySlot2 = 0x01BFCAD0; // U16 Species ID of 2nd PKM in party
+        public const uint KSparringFairyPartySlot3 = 0x04BFCF89; // U16 Species ID of 3rd PKM in party
     }
 }
 #pragma warning restore IDE0051 // Remove unused private members

@@ -298,7 +298,7 @@ namespace PKHeX.Core
             // No point using the evolution tree. Just handle certain species.
             switch (pkm.Species)
             {
-                case (int)Species.Lycanroc when (pkm.AltForm == 0 && Moon()) || (pkm.AltForm == 1 && Sun()):
+                case (int)Species.Lycanroc when pkm.Format == 7 && ((pkm.AltForm == 0 && Moon()) || (pkm.AltForm == 1 && Sun())):
                 case (int)Species.Solgaleo when Moon():
                 case (int)Species.Lunala when Sun():
                     bool Sun() => (pkm.Version & 1) == 0;
@@ -377,9 +377,28 @@ namespace PKHeX.Core
             if (pk8.Favorite)
                 data.AddLine(GetInvalid(LFavoriteMarkingUnavailable, Encounter));
 
-            var gflag = data.EncounterMatch is IGigantamax g && g.CanGigantamax;
-            if (gflag != pk8.CanGigantamax)
-                data.AddLine(GetInvalid(LStatGigantamaxInvalid));
+            var sn = pk8.StatNature;
+            if (sn != pk8.Nature)
+            {
+                // Only allow Serious nature (12); disallow all other neutral natures.
+                if (sn != 12 && (sn > 24 || sn % 6 == 0))
+                    data.AddLine(GetInvalid(LStatNatureInvalid));
+            }
+
+            var bv = pk8.BattleVersion;
+            if (bv != 0)
+            {
+                if (bv != (int)GameVersion.SW && bv != (int)GameVersion.SH || pk8.SWSH)
+                    data.AddLine(GetInvalid(LStatBattleVersionInvalid));
+            }
+
+            bool originGMax = data.EncounterMatch is IGigantamax g && g.CanGigantamax;
+            if (originGMax != pk8.CanGigantamax)
+            {
+                bool ok = pk8.CanToggleGigantamax(pk8.Species, data.EncounterMatch.Species);
+                var chk = ok ? GetValid(LStatGigantamaxValid) : GetInvalid(LStatGigantamaxInvalid);
+                data.AddLine(chk);
+            }
 
             if (pk8.DynamaxLevel != 0)
             {
