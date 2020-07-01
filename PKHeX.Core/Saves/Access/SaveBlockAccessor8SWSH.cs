@@ -50,11 +50,6 @@ namespace PKHeX.Core
             FameTime = new HallOfFameTime8(sav, GetBlock(KEnteredHallOfFame));
         }
 
-        /* To dump key list of current format, use the following in the immediate window, and update Meta8
-        var blocks = BlockInfo.Where(z => z.Data.Length != 0).Select(z => new KeyValuePair<uint, int>(z.Key, z.Data.Length)).Select(z => $"{z.Key:X8}, {z.Value:X5},");
-        System.IO.File.WriteAllLines("blank.txt", blocks.ToArray());
-        */
-
         // Arrays (Blocks)
         private const uint KTeamNames = 0x1920C1E4; // Team 1, 2...6 ((10 + terminator)*6 char16 strings)
         private const uint KBoxLayout = 0x19722c89; // Box Names
@@ -119,6 +114,8 @@ namespace PKHeX.Core
         private const uint KNormalEncount = 0xAD9DFA6A; // normal_encount
         private const uint KBonusRewards = 0xEFCAE04E; // bonus_rewards
 
+        private const uint KNormalEncountRigel1 = 0x0E615A8C; // normal_encount_rigel1
+
         // Values
         public const uint KCurrentBox = 0x017C3CBB; // U32 Box Index
         public const uint KGameLanguage = 0x0BFDEBA1; // U32 Game Language
@@ -139,6 +136,9 @@ namespace PKHeX.Core
         public const uint KVolumeBackgroundMusic = 0xF8154AC9; // U32 0-10
         public const uint KVolumeSoundEffects = 0x62F05895; // U32 0-10
         public const uint KVolumePokémonCries = 0x1D482A63; // U32 0-10
+
+        public const uint KRecordCramorantRobo = 0xB9C0ECFC; // cormorant_robo (Cram-o-matic uses)
+        public const uint KRecordBattleVersion = 0xBB1DE8EF; // battle_rom_mark (Past-gen Pokémon reset for battling in Ranked)
 
         public const uint KOptionTextSpeed = 0x92EB0306; // U32 TextSpeedOption
         public const uint KOptionBattleEffects = 0xCCC153CD; // U32 OptOut (Show effects by default)

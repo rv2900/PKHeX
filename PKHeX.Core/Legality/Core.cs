@@ -240,6 +240,8 @@ namespace PKHeX.Core
             }
             if ((pkm.Species == (int)Species.Meowstic || pkm.Species == (int)Species.Indeedee) && pkm.Gender == 1)
                 return pkm.AltForm == 1;
+            if (pkm.Species == (int)Species.Lycanroc)
+                return pkm.AltForm < 3;
             return pkm.Species == 773;
         }
 
@@ -249,7 +251,7 @@ namespace PKHeX.Core
             var min = curr.FindLast(z => z.Species == minSpecies);
             if (min != null && min.Level < minLevel)
                 return false;
-            var poss = EvolutionChain.GetValidPreEvolutions(pkm, lvl: 100, minLevel: minLevel, skipChecks: true);
+            var poss = EvolutionChain.GetValidPreEvolutions(pkm, maxLevel: 100, minLevel: minLevel, skipChecks: true);
 
             if (minSpecies != -1)
             {
@@ -396,7 +398,7 @@ namespace PKHeX.Core
             return pkm.CurrentLevel;
         }
 
-        internal static int GetMinLevelEncounter(PKM pkm)
+        internal static int GetMaxLevelEncounter(PKM pkm)
         {
             // Only for gen 3 pokemon in format 3, after transfer to gen 4 it should return transfer level
             if (pkm.Format == 3 && pkm.WasEgg)
@@ -414,9 +416,9 @@ namespace PKHeX.Core
         internal const GameVersion NONE = GameVersion.Invalid;
         internal static readonly LearnVersion LearnNONE = new LearnVersion(-1);
 
-        internal static bool HasVisitedB2W2(this PKM pkm) => pkm.InhabitedGeneration(5);
-        internal static bool HasVisitedORAS(this PKM pkm) => pkm.InhabitedGeneration(6) && (pkm.AO || !pkm.IsUntraded);
-        internal static bool HasVisitedUSUM(this PKM pkm) => pkm.InhabitedGeneration(7) && (pkm.USUM || !pkm.IsUntraded);
+        internal static bool HasVisitedB2W2(this PKM pkm, int species) => pkm.InhabitedGeneration(5, species);
+        internal static bool HasVisitedORAS(this PKM pkm, int species) => pkm.InhabitedGeneration(6, species) && (pkm.AO || !pkm.IsUntraded);
+        internal static bool HasVisitedUSUM(this PKM pkm, int species) => pkm.InhabitedGeneration(7, species) && (pkm.USUM || !pkm.IsUntraded);
         internal static bool IsMovesetRestricted(this PKM pkm, int gen) => (pkm.GG && gen == 7) || pkm.IsUntraded;
 
         public static bool HasMetLocationUpdatedTransfer(int originalGeneration, int currentGeneration)
